@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sign Up - AlumniX</title>
-    <link rel="stylesheet" href="css/styles.css">
     <style>
         * {
             margin: 0;
@@ -13,7 +12,7 @@
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
             display: flex;
@@ -22,151 +21,75 @@
             padding: 20px;
         }
 
-        .signup-container {
+        .signup-wrapper {
             background: white;
-            border-radius: 12px;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
             width: 100%;
-            max-width: 500px;
-            padding: 40px;
+            max-width: 480px;
+            overflow: hidden;
         }
 
         .signup-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px 30px;
             text-align: center;
-            margin-bottom: 30px;
         }
 
         .signup-header h1 {
-            color: #333;
-            font-size: 28px;
-            margin-bottom: 10px;
+            font-size: 32px;
+            margin-bottom: 8px;
+            font-weight: 700;
         }
 
         .signup-header p {
-            color: #666;
             font-size: 14px;
+            opacity: 0.9;
         }
 
-        .role-selector {
+        .signup-body {
+            padding: 40px 30px;
+        }
+
+        .role-tabs {
             display: flex;
-            gap: 10px;
+            gap: 0;
             margin-bottom: 30px;
-            border-bottom: 2px solid #eee;
-            padding-bottom: 20px;
+            background: #f0f0f0;
+            border-radius: 8px;
+            padding: 4px;
         }
 
-        .role-btn {
+        .role-tab {
             flex: 1;
-            padding: 10px 15px;
+            padding: 12px;
             border: none;
             background: transparent;
             cursor: pointer;
             font-size: 14px;
             font-weight: 600;
-            color: #999;
-            border-bottom: 3px solid transparent;
+            color: #666;
+            border-radius: 6px;
             transition: all 0.3s ease;
         }
 
-        .role-btn.active {
+        .role-tab.active {
+            background: white;
             color: #667eea;
-            border-bottom-color: #667eea;
-        }
-
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        .form-group label {
-            display: block;
-            color: #333;
-            font-weight: 600;
-            margin-bottom: 8px;
-            font-size: 14px;
-        }
-
-        .form-group input,
-        .form-group select {
-            width: 100%;
-            padding: 12px 15px;
-            border: 2px solid #eee;
-            border-radius: 8px;
-            font-size: 14px;
-            transition: border-color 0.3s ease;
-            font-family: inherit;
-        }
-
-        .form-group input:focus,
-        .form-group select:focus {
-            outline: none;
-            border-color: #667eea;
-        }
-
-        .form-group input::placeholder {
-            color: #bbb;
-        }
-
-        .form-row {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
-        }
-
-        .form-row .form-group {
-            margin-bottom: 0;
-        }
-
-        .signup-btn {
-            width: 100%;
-            padding: 12px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border: none;
-            border-radius: 8px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
-            margin-bottom: 15px;
-            margin-top: 10px;
-        }
-
-        .signup-btn:hover:not(:disabled) {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
-        }
-
-        .signup-btn:disabled {
-            opacity: 0.7;
-            cursor: not-allowed;
-        }
-
-        .login-link {
-            text-align: center;
-            color: #666;
-            font-size: 14px;
-        }
-
-        .login-link a {
-            color: #667eea;
-            text-decoration: none;
-            font-weight: 600;
-        }
-
-        .login-link a:hover {
-            text-decoration: underline;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
         }
 
         .alert {
             padding: 12px 15px;
             border-radius: 8px;
             margin-bottom: 20px;
-            font-size: 14px;
+            font-size: 13px;
             display: none;
-            animation: slideDown 0.3s ease;
+            animation: slideIn 0.3s ease;
         }
 
-        @keyframes slideDown {
+        @keyframes slideIn {
             from {
                 opacity: 0;
                 transform: translateY(-10px);
@@ -193,26 +116,6 @@
             border: 1px solid #f5c6cb;
         }
 
-        .loading {
-            display: inline-block;
-            width: 14px;
-            height: 14px;
-            border: 2px solid rgba(255,255,255,0.3);
-            border-radius: 50%;
-            border-top-color: white;
-            animation: spin 0.8s linear infinite;
-            margin-right: 8px;
-            vertical-align: middle;
-        }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-
-        .hidden {
-            display: none !important;
-        }
-
         .form-section {
             display: none;
         }
@@ -220,123 +123,229 @@
         .form-section.active {
             display: block;
         }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        .form-group label {
+            display: block;
+            color: #333;
+            font-weight: 600;
+            margin-bottom: 6px;
+            font-size: 13px;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 11px 13px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 13px;
+            transition: all 0.3s ease;
+            font-family: inherit;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .form-group input::placeholder {
+            color: #999;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .form-row .form-group {
+            margin-bottom: 0;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 13px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .submit-btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(102, 126, 234, 0.4);
+        }
+
+        .submit-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .spinner {
+            width: 14px;
+            height: 14px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-top-color: white;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .footer-link {
+            text-align: center;
+            margin-top: 20px;
+            color: #666;
+            font-size: 13px;
+        }
+
+        .footer-link a {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .footer-link a:hover {
+            text-decoration: underline;
+        }
     </style>
 </head>
 <body>
-    <div class="signup-container">
+    <div class="signup-wrapper">
         <div class="signup-header">
             <h1>AlumniX</h1>
-            <p>Join Our Community</p>
+            <p>Join our community of innovators</p>
         </div>
 
-        <div id="alert" class="alert"></div>
+        <div class="signup-body">
+            <div id="alert" class="alert"></div>
 
-        <div class="role-selector">
-            <button class="role-btn active" data-role="student">Student</button>
-            <button class="role-btn" data-role="alumni">Alumni</button>
-        </div>
-
-        <form id="signupForm">
-            <!-- Student Form -->
-            <div id="studentForm" class="form-section active">
-                <div class="form-group">
-                    <label for="studentFullName">Full Name</label>
-                    <input type="text" id="studentFullName" placeholder="John Doe" required>
-                </div>
-
-                <div class="form-group">
-                    <label for="studentEmail">Email Address</label>
-                    <input type="email" id="studentEmail" placeholder="john@gmail.com or john@kite.ac.in" required>
-                </div>
-
-                <div class="form-group">
-                    <label for="studentDepartment">Department</label>
-                    <select id="studentDepartment" required>
-                        <option value="">Select Department</option>
-                        <option value="Computer Science">Computer Science & Engineering</option>
-                        <option value="Electronics">Electronics & Communication</option>
-                        <option value="Mechanical">Mechanical Engineering</option>
-                        <option value="Civil">Civil Engineering</option>
-                        <option value="Electrical">Electrical Engineering</option>
-                        <option value="Information">Information Technology</option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label for="studentBatch">Current Batch</label>
-                    <input type="number" id="studentBatch" placeholder="2024" min="2020" max="2030" required>
-                </div>
-
-                <div class="form-group">
-                    <label for="studentPassword">Password</label>
-                    <input type="password" id="studentPassword" placeholder="At least 8 characters" required>
-                </div>
-
-                <div class="form-group">
-                    <label for="studentConfirmPassword">Confirm Password</label>
-                    <input type="password" id="studentConfirmPassword" placeholder="Confirm your password" required>
-                </div>
+            <div class="role-tabs">
+                <button class="role-tab active" data-role="student">Student</button>
+                <button class="role-tab" data-role="alumni">Alumni</button>
             </div>
 
-            <!-- Alumni Form -->
-            <div id="alumniForm" class="form-section">
-                <div class="form-group">
-                    <label for="alumniFullName">Full Name</label>
-                    <input type="text" id="alumniFullName" placeholder="Jane Smith" required>
-                </div>
-
-                <div class="form-group">
-                    <label for="alumniEmail">Email</label>
-                    <input type="email" id="alumniEmail" placeholder="jane@company.com" required>
-                </div>
-
-                <div class="form-group">
-                    <label for="alumniDepartment">Department (During Study)</label>
-                    <select id="alumniDepartment" required>
-                        <option value="">Select Department</option>
-                        <option value="Computer Science">Computer Science & Engineering</option>
-                        <option value="Electronics">Electronics & Communication</option>
-                        <option value="Mechanical">Mechanical Engineering</option>
-                        <option value="Civil">Civil Engineering</option>
-                        <option value="Electrical">Electrical Engineering</option>
-                        <option value="Information">Information Technology</option>
-                    </select>
-                </div>
-
-                <div class="form-row">
+            <form id="signupForm">
+                <!-- Student Form -->
+                <div id="studentSection" class="form-section active">
                     <div class="form-group">
-                        <label for="alumniGradYear">Graduation Year</label>
-                        <input type="number" id="alumniGradYear" placeholder="2020" min="1990" max="2024" required>
+                        <label>Full Name</label>
+                        <input type="text" id="studentName" placeholder="John Doe" required>
                     </div>
+
                     <div class="form-group">
-                        <label for="alumniCompany">Current Company</label>
-                        <input type="text" id="alumniCompany" placeholder="Tech Corp" required>
+                        <label>Email Address</label>
+                        <input type="email" id="studentEmail" placeholder="john@gmail.com" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Department</label>
+                        <select id="studentDept" required>
+                            <option value="">Select your department</option>
+                            <option value="Computer Science">Computer Science & Engineering</option>
+                            <option value="Electronics">Electronics & Communication</option>
+                            <option value="Mechanical">Mechanical Engineering</option>
+                            <option value="Civil">Civil Engineering</option>
+                            <option value="Electrical">Electrical Engineering</option>
+                            <option value="Information">Information Technology</option>
+                        </select>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Batch Year</label>
+                            <input type="number" id="studentBatch" placeholder="2024" min="2020" max="2030" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Password</label>
+                            <input type="password" id="studentPass" placeholder="Min 8 characters" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Confirm Password</label>
+                        <input type="password" id="studentPassConfirm" placeholder="Confirm password" required>
                     </div>
                 </div>
 
-                <div class="form-group">
-                    <label for="alumniJobRole">Job Role</label>
-                    <input type="text" id="alumniJobRole" placeholder="Software Engineer" required>
+                <!-- Alumni Form -->
+                <div id="alumniSection" class="form-section">
+                    <div class="form-group">
+                        <label>Full Name</label>
+                        <input type="text" id="alumniName" placeholder="Jane Smith" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Email Address</label>
+                        <input type="email" id="alumniEmail" placeholder="jane@company.com" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Department (During Study)</label>
+                        <select id="alumniDept" required>
+                            <option value="">Select your department</option>
+                            <option value="Computer Science">Computer Science & Engineering</option>
+                            <option value="Electronics">Electronics & Communication</option>
+                            <option value="Mechanical">Mechanical Engineering</option>
+                            <option value="Civil">Civil Engineering</option>
+                            <option value="Electrical">Electrical Engineering</option>
+                            <option value="Information">Information Technology</option>
+                        </select>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Graduation Year</label>
+                            <input type="number" id="alumniYear" placeholder="2020" min="1990" max="2024" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Company</label>
+                            <input type="text" id="alumniCompany" placeholder="Tech Corp" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Job Title</label>
+                        <input type="text" id="alumniTitle" placeholder="Senior Engineer" required>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Password</label>
+                            <input type="password" id="alumniPass" placeholder="Min 8 characters" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Confirm Password</label>
+                            <input type="password" id="alumniPassConfirm" placeholder="Confirm password" required>
+                        </div>
+                    </div>
                 </div>
 
-                <div class="form-group">
-                    <label for="alumniPassword">Password</label>
-                    <input type="password" id="alumniPassword" placeholder="At least 8 characters" required>
-                </div>
+                <button type="submit" class="submit-btn" id="submitBtn">
+                    Create Account
+                </button>
+            </form>
 
-                <div class="form-group">
-                    <label for="alumniConfirmPassword">Confirm Password</label>
-                    <input type="password" id="alumniConfirmPassword" placeholder="Confirm your password" required>
-                </div>
+            <div class="footer-link">
+                Already have an account? <a href="login.html">Log in here</a>
             </div>
-
-            <button type="submit" class="signup-btn" id="signupBtn">
-                Create Account
-            </button>
-        </form>
-
-        <div class="login-link">
-            Already have an account? <a href="login.html">Log In</a>
         </div>
     </div>
 
@@ -346,41 +355,42 @@
     <script src="js/api.js"></script>
 
     <script>
-        let selectedRole = 'student';
+        let activeRole = 'student';
 
-        document.querySelectorAll('.role-btn').forEach(btn => {
-            btn.addEventListener('click', () => {
-                document.querySelectorAll('.role-btn').forEach(b => b.classList.remove('active'));
-                btn.classList.add('active');
-                selectedRole = btn.dataset.role;
-
-                document.querySelectorAll('.form-section').forEach(form => form.classList.remove('active'));
-                if (selectedRole === 'student') {
-                    document.getElementById('studentForm').classList.add('active');
+        document.querySelectorAll('.role-tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                document.querySelectorAll('.role-tab').forEach(t => t.classList.remove('active'));
+                document.querySelectorAll('.form-section').forEach(s => s.classList.remove('active'));
+                
+                tab.classList.add('active');
+                activeRole = tab.dataset.role;
+                
+                if (activeRole === 'student') {
+                    document.getElementById('studentSection').classList.add('active');
                 } else {
-                    document.getElementById('alumniForm').classList.add('active');
+                    document.getElementById('alumniSection').classList.add('active');
                 }
             });
         });
 
-        function showAlert(message, type = 'error') {
-            const alertBox = document.getElementById('alert');
-            alertBox.textContent = message;
-            alertBox.className = `alert show ${type}`;
-            setTimeout(() => {
-                alertBox.classList.remove('show');
-            }, 5000);
+        function showAlert(msg, type = 'error') {
+            const alert = document.getElementById('alert');
+            alert.textContent = msg;
+            alert.className = `alert show ${type}`;
+            if (type === 'success') {
+                setTimeout(() => alert.classList.remove('show'), 3000);
+            }
         }
 
         document.getElementById('signupForm').addEventListener('submit', async (e) => {
             e.preventDefault();
-
-            const signupBtn = document.getElementById('signupBtn');
-            signupBtn.disabled = true;
-            signupBtn.innerHTML = '<span class="loading"></span>Creating Account...';
+            
+            const btn = document.getElementById('submitBtn');
+            btn.disabled = true;
+            btn.innerHTML = '<span class="spinner"></span> Creating account...';
 
             try {
-                if (selectedRole === 'student') {
+                if (activeRole === 'student') {
                     await signupStudent();
                 } else {
                     await signupAlumni();
@@ -388,161 +398,138 @@
             } catch (err) {
                 console.error('Signup error:', err);
                 showAlert(err.message || 'Signup failed', 'error');
-                signupBtn.disabled = false;
-                signupBtn.innerHTML = 'Create Account';
+                btn.disabled = false;
+                btn.innerHTML = 'Create Account';
             }
         });
 
         async function signupStudent() {
-            const fullName = document.getElementById('studentFullName').value.trim();
+            const name = document.getElementById('studentName').value.trim();
             const email = document.getElementById('studentEmail').value.trim();
-            const department = document.getElementById('studentDepartment').value;
+            const dept = document.getElementById('studentDept').value;
             const batch = document.getElementById('studentBatch').value;
-            const password = document.getElementById('studentPassword').value;
-            const confirmPassword = document.getElementById('studentConfirmPassword').value;
+            const pass = document.getElementById('studentPass').value;
+            const passConfirm = document.getElementById('studentPassConfirm').value;
 
-            console.log('[Signup] Starting student signup:', { email, fullName });
-
-            if (!fullName || !email || !department || !batch || !password) {
-                throw new Error('Please fill in all fields');
+            if (!name || !email || !dept || !batch || !pass) {
+                throw new Error('Please fill all fields');
             }
 
-            if (password !== confirmPassword) {
+            if (pass !== passConfirm) {
                 throw new Error('Passwords do not match');
             }
 
-            if (password.length < 8) {
+            if (pass.length < 8) {
                 throw new Error('Password must be at least 8 characters');
             }
 
-            if (!email.includes('@')) {
-                throw new Error('Please enter a valid email address');
-            }
-
-            console.log('[Signup] Validation passed, creating account...');
-
-            // Sign up in Supabase Auth
+            // 1. Sign up with Supabase Auth
             const { data, error } = await window.supabaseClient.auth.signUp({
                 email,
-                password,
-                options: {
-                    data: {
-                        full_name: fullName,
-                        role: 'student',
-                        department: department,
-                        batch: batch
-                    }
-                }
+                password: pass,
+                options: { data: { full_name: name, role: 'student' } }
             });
 
-            if (error) {
-                console.error('[Signup] Supabase error:', error);
-                throw new Error(error.message);
+            if (error) throw new Error(error.message);
+            if (!data.user) throw new Error('Signup failed');
+
+            const userId = data.user.id;
+
+            // 2. Call backend to create user record
+            try {
+                const response = await fetch(
+                    window.location.origin.includes('5000') ? 'http://127.0.0.1:5000/api/auth-complete-signup' : '/api/auth-complete-signup',
+                    {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            user_id: userId,
+                            email,
+                            full_name: name,
+                            role: 'student',
+                            department: dept
+                        })
+                    }
+                );
+
+                if (!response.ok) {
+                    const errData = await response.json();
+                    throw new Error(errData.error || 'Backend signup failed');
+                }
+            } catch (err) {
+                console.warn('Backend sync warning:', err);
+                // Continue anyway - user is created in auth
             }
 
-            console.log('[Signup] Signup response:', data);
+            localStorage.setItem('alumnix_user', JSON.stringify({ id: userId, email, name, role: 'student' }));
+            showAlert('Account created! Redirecting...', 'success');
 
-            if (!data.user) {
-                throw new Error('Failed to create account');
-            }
-
-            console.log('[Signup] User created:', data.user.id);
-
-            // Save user data
-            const user = {
-                id: data.user.id,
-                email: email,
-                full_name: fullName,
-                role: 'student',
-                department: department,
-                batch: batch
-            };
-
-            localStorage.setItem('alumnix_user', JSON.stringify(user));
-            console.log('[Signup] User saved to localStorage');
-
-            showAlert('Account created successfully! Redirecting...', 'success');
-
-            setTimeout(() => {
-                window.location.href = 'profile.html';
-            }, 1500);
+            setTimeout(() => { window.location.href = 'profile.html'; }, 1500);
         }
 
         async function signupAlumni() {
-            const fullName = document.getElementById('alumniFullName').value.trim();
+            const name = document.getElementById('alumniName').value.trim();
             const email = document.getElementById('alumniEmail').value.trim();
-            const department = document.getElementById('alumniDepartment').value;
-            const gradYear = document.getElementById('alumniGradYear').value;
+            const dept = document.getElementById('alumniDept').value;
+            const year = document.getElementById('alumniYear').value;
             const company = document.getElementById('alumniCompany').value.trim();
-            const jobRole = document.getElementById('alumniJobRole').value.trim();
-            const password = document.getElementById('alumniPassword').value;
-            const confirmPassword = document.getElementById('alumniConfirmPassword').value;
+            const title = document.getElementById('alumniTitle').value.trim();
+            const pass = document.getElementById('alumniPass').value;
+            const passConfirm = document.getElementById('alumniPassConfirm').value;
 
-            console.log('[Signup] Starting alumni signup:', { email, fullName });
-
-            if (!fullName || !email || !department || !gradYear || !company || !jobRole || !password) {
-                throw new Error('Please fill in all fields');
+            if (!name || !email || !dept || !year || !company || !title || !pass) {
+                throw new Error('Please fill all fields');
             }
 
-            if (password !== confirmPassword) {
+            if (pass !== passConfirm) {
                 throw new Error('Passwords do not match');
             }
 
-            if (password.length < 8) {
+            if (pass.length < 8) {
                 throw new Error('Password must be at least 8 characters');
             }
 
-            console.log('[Signup] Validation passed, creating alumni account...');
-
-            // Sign up in Supabase Auth
+            // 1. Sign up with Supabase Auth
             const { data, error } = await window.supabaseClient.auth.signUp({
                 email,
-                password,
-                options: {
-                    data: {
-                        full_name: fullName,
-                        role: 'alumni',
-                        department: department,
-                        grad_year: gradYear,
-                        company: company,
-                        job_role: jobRole
-                    }
-                }
+                password: pass,
+                options: { data: { full_name: name, role: 'alumni' } }
             });
 
-            if (error) {
-                console.error('[Signup] Supabase error:', error);
-                throw new Error(error.message);
+            if (error) throw new Error(error.message);
+            if (!data.user) throw new Error('Signup failed');
+
+            const userId = data.user.id;
+
+            // 2. Call backend to create user record
+            try {
+                const response = await fetch(
+                    window.location.origin.includes('5000') ? 'http://127.0.0.1:5000/api/auth-complete-signup' : '/api/auth-complete-signup',
+                    {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            user_id: userId,
+                            email,
+                            full_name: name,
+                            role: 'alumni',
+                            department: dept
+                        })
+                    }
+                );
+
+                if (!response.ok) {
+                    const errData = await response.json();
+                    throw new Error(errData.error || 'Backend signup failed');
+                }
+            } catch (err) {
+                console.warn('Backend sync warning:', err);
             }
 
-            console.log('[Signup] Signup response:', data);
+            localStorage.setItem('alumnix_user', JSON.stringify({ id: userId, email, name, role: 'alumni' }));
+            showAlert('Account created! Redirecting...', 'success');
 
-            if (!data.user) {
-                throw new Error('Failed to create account');
-            }
-
-            console.log('[Signup] Alumni user created:', data.user.id);
-
-            // Save user data
-            const user = {
-                id: data.user.id,
-                email: email,
-                full_name: fullName,
-                role: 'alumni',
-                department: department,
-                grad_year: gradYear,
-                company: company,
-                job_role: jobRole
-            };
-
-            localStorage.setItem('alumnix_user', JSON.stringify(user));
-            console.log('[Signup] Alumni user saved to localStorage');
-
-            showAlert('Account created successfully! Redirecting...', 'success');
-
-            setTimeout(() => {
-                window.location.href = 'profile.html';
-            }, 1500);
+            setTimeout(() => { window.location.href = 'profile.html'; }, 1500);
         }
     </script>
 </body>
