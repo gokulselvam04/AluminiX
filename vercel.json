@@ -1,10 +1,17 @@
 {
   "version": 2,
   "builds": [
-    {
-      "src": "api/*.py",
-      "use": "@vercel/python"
-    },
+    { "src": "api/alumni.py", "use": "@vercel/python" },
+    { "src": "api/alumni_profile.py", "use": "@vercel/python" },
+    { "src": "api/auth_complete_signup.py", "use": "@vercel/python" },
+    { "src": "api/chat_message.py", "use": "@vercel/python" },
+    { "src": "api/dashboard_stats.py", "use": "@vercel/python" },
+    { "src": "api/impact_stats.py", "use": "@vercel/python" },
+    { "src": "api/jobs.py", "use": "@vercel/python" },
+    { "src": "api/matchmaker_run.py", "use": "@vercel/python" },
+    { "src": "api/mentorship_request.py", "use": "@vercel/python" },
+    { "src": "api/profile_me.py", "use": "@vercel/python" },
+    { "src": "api/roadmap.py", "use": "@vercel/python" },
     {
       "src": "*.html",
       "use": "@vercel/static"
