@@ -6,9 +6,18 @@
 class ApiClient {
   getApiBase() {
     if (window.ALUMNIX_CONFIG && window.ALUMNIX_CONFIG.API_BASE_URL) {
-      return window.ALUMNIX_CONFIG.API_BASE_URL;
+      const base = window.ALUMNIX_CONFIG.API_BASE_URL;
+      // Remove /api suffix if present, we add it in endpoint construction
+      return base.endsWith('/api') ? base.substring(0, base.length - 4) : base;
     }
-    return window.location.origin.includes('5000') ? 'http://127.0.0.1:5000/api' : '/api';
+    return '';
+  }
+
+  getFullUrl(endpoint) {
+    const base = this.getApiBase();
+    // Always ensure endpoint starts with /api/
+    const normalizedEndpoint = endpoint.startsWith('/api/') ? endpoint : endpoint.startsWith('/') ? `/api${endpoint}` : `/api/${endpoint}`;
+    return base ? `${base}${normalizedEndpoint}` : normalizedEndpoint;
   }
 
   async getAuthHeaders() {
@@ -32,9 +41,8 @@ class ApiClient {
   }
 
   async get(endpoint, params = {}) {
-    const apiBase = this.getApiBase();
-    const urlStr = endpoint.startsWith('http') ? endpoint : `${apiBase}${endpoint.startsWith('/') ? '' : '/'}${endpoint}`;
-    const url = new URL(urlStr, window.location.origin);
+    const fullUrl = this.getFullUrl(endpoint);
+    const url = new URL(fullUrl, window.location.origin);
     
     Object.keys(params).forEach(key => {
       if (params[key] !== undefined && params[key] !== null) {
@@ -43,15 +51,16 @@ class ApiClient {
     });
 
     const headers = await this.getAuthHeaders();
+    console.log(`[ApiClient] GET ${url.toString()}`);
     const response = await fetch(url.toString(), { method: 'GET', headers });
     return this.handleResponse(response);
   }
 
   async post(endpoint, data = {}) {
-    const apiBase = this.getApiBase();
-    const url = endpoint.startsWith('http') ? endpoint : `${apiBase}${endpoint.startsWith('/') ? '' : '/'}${endpoint}`;
+    const fullUrl = this.getFullUrl(endpoint);
     const headers = await this.getAuthHeaders();
-    const response = await fetch(url, {
+    console.log(`[ApiClient] POST ${fullUrl}`, data);
+    const response = await fetch(fullUrl, {
       method: 'POST',
       headers,
       body: JSON.stringify(data)
@@ -60,10 +69,10 @@ class ApiClient {
   }
 
   async patch(endpoint, data = {}) {
-    const apiBase = this.getApiBase();
-    const url = endpoint.startsWith('http') ? endpoint : `${apiBase}${endpoint.startsWith('/') ? '' : '/'}${endpoint}`;
+    const fullUrl = this.getFullUrl(endpoint);
     const headers = await this.getAuthHeaders();
-    const response = await fetch(url, {
+    console.log(`[ApiClient] PATCH ${fullUrl}`, data);
+    const response = await fetch(fullUrl, {
       method: 'PATCH',
       headers,
       body: JSON.stringify(data)
