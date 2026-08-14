@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Auth Test - AlumniX</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+        }
+        .test-box {
+            border: 1px solid #ccc;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+        }
+        .success { background: #d4edda; color: #155724; }
+        .error { background: #f8d7da; color: #721c24; }
+        .info { background: #d1ecf1; color: #0c5460; }
+        button {
+            background: #007bff;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <h1>AlumniX Auth Test</h1>
+
+    <div class="test-box info">
+        <h3>Configuration Status</h3>
+        <p>Checking Supabase configuration...</p>
+        <div id="configStatus"></div>
+    </div>
+
+    <div class="test-box">
+        <h3>Test Signup</h3>
+        <input type="text" id="testName" placeholder="Full Name" value="Test User">
+        <input type="email" id="testEmail" placeholder="Email" value="test@gmail.com">
+        <input type="password" id="testPassword" placeholder="Password" value="TestPass123">
+        <button onclick="testSignup()">Test Signup</button>
+        <div id="signupStatus"></div>
+    </div>
+
+    <div class="test-box">
+        <h3>Test Login</h3>
+        <input type="email" id="loginEmail" placeholder="Email" value="test@gmail.com">
+        <input type="password" id="loginPassword" placeholder="Password" value="TestPass123">
+        <button onclick="testLogin()">Test Login</button>
+        <div id="loginStatus"></div>
+    </div>
+
+    <div class="test-box">
+        <h3>Current User</h3>
+        <button onclick="checkCurrentUser()">Check Current User</button>
+        <div id="userStatus"></div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.0.0/dist/module.js"></script>
+    <script src="js/config.js"></script>
+    <script src="js/supabase-client.js"></script>
+
+    <script>
+        function log(elementId, message, type = 'info') {
+            const el = document.getElementById(elementId);
+            el.innerHTML += `<div class="${type}">${new Date().toLocaleTimeString()}: ${message}</div>`;
+            console.log(message);
+        }
+
+        // Check config
+        window.addEventListener('load', () => {
+            if (window.ALUMNIX_CONFIG) {
+                log('configStatus', `✅ Config loaded: ${window.ALUMNIX_CONFIG.SUPABASE_URL}`, 'success');
+            } else {
+                log('configStatus', '❌ Config not found', 'error');
+            }
+
+            if (window.supabaseClient) {
+                log('configStatus', '✅ Supabase client initialized', 'success');
+            } else {
+                log('configStatus', '❌ Supabase client not initialized', 'error');
+            }
+        });
+
+        async function testSignup() {
+            const name = document.getElementById('testName').value;
+            const email = document.getElementById('testEmail').value;
+            const password = document.getElementById('testPassword').value;
+
+            if (!name || !email || !password) {
+                log('signupStatus', 'Please fill all fields', 'error');
+                return;
+            }
+
+            log('signupStatus', 'Starting signup...', 'info');
+
+            try {
+                const { data, error } = await window.supabaseClient.auth.signUp({
+                    email,
+                    password,
+                    options: {
+                        data: { full_name: name, role: 'student' }
+                    }
+                });
+
+                if (error) {
+                    log('signupStatus', `❌ Error: ${error.message}`, 'error');
+                    return;
+                }
+
+                if (data.user) {
+                    log('signupStatus', `✅ Signup successful! User ID: ${data.user.id}`, 'success');
+                    localStorage.setItem('alumnix_user', JSON.stringify({
+                        id: data.user.id,
+                        email: email,
+                        full_name: name,
+                        role: 'student'
+                    }));
+                } else {
+                    log('signupStatus', 'Signup returned no user data', 'error');
+                }
+            } catch (err) {
+                log('signupStatus', `❌ Exception: ${err.message}`, 'error');
+            }
+        }
+
+        async function testLogin() {
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+
+            if (!email || !password) {
+                log('loginStatus', 'Please fill all fields', 'error');
+                return;
+            }
+
+            log('loginStatus', 'Starting login...', 'info');
+
+            try {
+                const { data, error } = await window.supabaseClient.auth.signInWithPassword({
+                    email,
+                    password
+                });
+
+                if (error) {
+                    log('loginStatus', `❌ Error: ${error.message}`, 'error');
+                    return;
+                }
+
+                if (data.user) {
+                    log('loginStatus', `✅ Login successful! User ID: ${data.user.id}`, 'success');
+                    localStorage.setItem('alumnix_user', JSON.stringify({
+                        id: data.user.id,
+                        email: data.user.email,
+                        role: 'student'
+                    }));
+                } else {
+                    log('loginStatus', 'Login returned no user data', 'error');
+                }
+            } catch (err) {
+                log('loginStatus', `❌ Exception: ${err.message}`, 'error');
+            }
+        }
+
+        async function checkCurrentUser() {
+            try {
+                const { data: { user } } = await window.supabaseClient.auth.getUser();
+                if (user) {
+                    log('userStatus', `✅ Current user: ${user.email} (ID: ${user.id})`, 'success');
+                } else {
+                    log('userStatus', 'No user logged in', 'info');
+                }
+            } catch (err) {
+                log('userStatus', `❌ Error: ${err.message}`, 'error');
+            }
+        }
+    </script>
+</body>
+</html>

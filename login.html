@@ -294,6 +294,8 @@
             const password = document.getElementById('password').value;
             const loginBtn = document.getElementById('loginBtn');
 
+            console.log('[Login] Attempting login with email:', email);
+
             if (!email || !password) {
                 showAlert('Please fill in all fields', 'error');
                 return;
@@ -303,14 +305,19 @@
             loginBtn.innerHTML = '<span class="loading"></span>Logging in...';
 
             try {
+                console.log('[Login] Calling Supabase auth.signInWithPassword...');
+
                 const { data, error } = await window.supabaseClient.auth.signInWithPassword({
                     email,
                     password
                 });
 
                 if (error) {
+                    console.error('[Login] Auth error:', error);
                     throw new Error(error.message);
                 }
+
+                console.log('[Login] Login successful:', data.user.id);
 
                 if (!data.user) {
                     throw new Error('Login failed');
@@ -325,13 +332,14 @@
                     role: selectedRole
                 };
                 localStorage.setItem('alumnix_user', JSON.stringify(user));
+                console.log('[Login] User saved to localStorage');
 
                 setTimeout(() => {
                     window.location.href = 'dashboard.html';
                 }, 1500);
 
             } catch (err) {
-                console.error('Login error:', err);
+                console.error('[Login] Error:', err);
                 showAlert(err.message || 'Login failed. Please check your credentials.', 'error');
                 loginBtn.disabled = false;
                 loginBtn.innerHTML = 'Log In';

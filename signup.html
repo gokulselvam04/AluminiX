@@ -245,8 +245,8 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="studentEmail">Email (@kite.ac.in)</label>
-                    <input type="email" id="studentEmail" placeholder="john@kite.ac.in" required>
+                    <label for="studentEmail">Email Address</label>
+                    <input type="email" id="studentEmail" placeholder="john@gmail.com or john@kite.ac.in" required>
                 </div>
 
                 <div class="form-group">
@@ -401,6 +401,8 @@
             const password = document.getElementById('studentPassword').value;
             const confirmPassword = document.getElementById('studentConfirmPassword').value;
 
+            console.log('[Signup] Starting student signup:', { email, fullName });
+
             if (!fullName || !email || !department || !batch || !password) {
                 throw new Error('Please fill in all fields');
             }
@@ -413,9 +415,11 @@
                 throw new Error('Password must be at least 8 characters');
             }
 
-            if (!email.endsWith('@kite.ac.in')) {
-                throw new Error('Student email must end with @kite.ac.in');
+            if (!email.includes('@')) {
+                throw new Error('Please enter a valid email address');
             }
+
+            console.log('[Signup] Validation passed, creating account...');
 
             // Sign up in Supabase Auth
             const { data, error } = await window.supabaseClient.auth.signUp({
@@ -432,14 +436,19 @@
             });
 
             if (error) {
+                console.error('[Signup] Supabase error:', error);
                 throw new Error(error.message);
             }
+
+            console.log('[Signup] Signup response:', data);
 
             if (!data.user) {
                 throw new Error('Failed to create account');
             }
 
-            // Save user data via API
+            console.log('[Signup] User created:', data.user.id);
+
+            // Save user data
             const user = {
                 id: data.user.id,
                 email: email,
@@ -450,6 +459,7 @@
             };
 
             localStorage.setItem('alumnix_user', JSON.stringify(user));
+            console.log('[Signup] User saved to localStorage');
 
             showAlert('Account created successfully! Redirecting...', 'success');
 
@@ -468,6 +478,8 @@
             const password = document.getElementById('alumniPassword').value;
             const confirmPassword = document.getElementById('alumniConfirmPassword').value;
 
+            console.log('[Signup] Starting alumni signup:', { email, fullName });
+
             if (!fullName || !email || !department || !gradYear || !company || !jobRole || !password) {
                 throw new Error('Please fill in all fields');
             }
@@ -479,6 +491,8 @@
             if (password.length < 8) {
                 throw new Error('Password must be at least 8 characters');
             }
+
+            console.log('[Signup] Validation passed, creating alumni account...');
 
             // Sign up in Supabase Auth
             const { data, error } = await window.supabaseClient.auth.signUp({
@@ -497,12 +511,17 @@
             });
 
             if (error) {
+                console.error('[Signup] Supabase error:', error);
                 throw new Error(error.message);
             }
+
+            console.log('[Signup] Signup response:', data);
 
             if (!data.user) {
                 throw new Error('Failed to create account');
             }
+
+            console.log('[Signup] Alumni user created:', data.user.id);
 
             // Save user data
             const user = {
@@ -517,6 +536,7 @@
             };
 
             localStorage.setItem('alumnix_user', JSON.stringify(user));
+            console.log('[Signup] Alumni user saved to localStorage');
 
             showAlert('Account created successfully! Redirecting...', 'success');
 
