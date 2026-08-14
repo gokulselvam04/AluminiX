@@ -1,0 +1,83 @@
+{
+  "version": 2,
+  "builds": [
+    {
+      "src": "api/*.py",
+      "use": "@vercel/python"
+    },
+    {
+      "src": "*.html",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "css/**",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "js/**",
+      "use": "@vercel/static"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/api/auth-complete-signup",
+      "dest": "/api/auth_complete_signup.py"
+    },
+    {
+      "src": "/api/alumni-profile",
+      "dest": "/api/alumni_profile.py"
+    },
+    {
+      "src": "/api/alumni",
+      "dest": "/api/alumni.py"
+    },
+    {
+      "src": "/api/jobs",
+      "dest": "/api/jobs.py"
+    },
+    {
+      "src": "/api/matchmaker-run",
+      "dest": "/api/matchmaker_run.py"
+    },
+    {
+      "src": "/api/chat-message",
+      "dest": "/api/chat_message.py"
+    },
+    {
+      "src": "/api/chat-history",
+      "dest": "/api/chat_message.py"
+    },
+    {
+      "src": "/api/roadmap-generate",
+      "dest": "/api/roadmap.py"
+    },
+    {
+      "src": "/api/roadmap-progress",
+      "dest": "/api/roadmap.py"
+    },
+    {
+      "src": "/api/mentorship-request",
+      "dest": "/api/mentorship_request.py"
+    },
+    {
+      "src": "/api/mentorship-requests",
+      "dest": "/api/mentorship_request.py"
+    },
+    {
+      "src": "/api/profile-me",
+      "dest": "/api/profile_me.py"
+    },
+    {
+      "src": "/api/dashboard-stats",
+      "dest": "/api/dashboard_stats.py"
+    },
+    {
+      "src": "/api/impact-stats",
+      "dest": "/api/impact_stats.py"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/$1"
+    }
+  ]
+}

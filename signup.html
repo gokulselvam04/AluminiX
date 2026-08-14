@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sign up — AlumniX</title>
+  <link rel="stylesheet" href="css/styles.css">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body style="background-color: var(--bg-page); display: flex; flex-direction: column; min-height: 100vh;">
+
+  <div style="padding: 24px 32px;">
+    <a href="index.html" class="logo-wrapper">
+      <div class="logo-emblem">✨</div>
+      <span><span class="logo-text-dark">Alumni</span><span class="logo-text-x">X</span></span>
+    </a>
+  </div>
+
+  <main style="flex: 1; display: flex; align-items: center; justify-content: center; padding: 20px;">
+    <div class="card" style="width: 100%; max-width: 520px; padding: 32px;">
+      
+      <!-- Role Selection Segmented Toggle -->
+      <div class="segmented-toggle" id="auth-role-toggle">
+        <button type="button" class="segmented-toggle-btn active" data-role="student" id="role-toggle-student">
+          <span>🎓</span> Student
+        </button>
+        <button type="button" class="segmented-toggle-btn" data-role="alumni" id="role-toggle-alumni">
+          <span>💼</span> Alumnus
+        </button>
+      </div>
+
+      <div style="text-align: center; margin-bottom: 24px;">
+        <h2 style="font-size: 1.6rem;" id="auth-heading">Create Account</h2>
+        <p class="text-sm text-muted" id="auth-subheading">Continue your journey as a student</p>
+      </div>
+
+      <!-- Alert Container -->
+      <div id="auth-alert-container" style="display: none;"></div>
+
+      <!-- Signup Form -->
+      <form id="signup-form">
+        
+        <div class="form-group">
+          <label class="form-label" for="signup-fullname">Full Name</label>
+          <input type="text" id="signup-fullname" class="form-control" placeholder="e.g. Aravind Swaminathan" required>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="signup-email" id="label-email">Institution Email (@kite.ac.in)</label>
+          <input type="email" id="signup-email" class="form-control" placeholder="name@kite.ac.in" required>
+          <span class="text-xs text-muted" id="email-domain-hint">Must match institutional domain @kite.ac.in</span>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="signup-department">Department</label>
+          <select id="signup-department" class="form-control" required>
+            <option value="Computer Science & Engineering">Computer Science & Engineering (CSE)</option>
+            <option value="Artificial Intelligence & Data Science">Artificial Intelligence & Data Science (AI&DS)</option>
+            <option value="Information Technology">Information Technology (IT)</option>
+            <option value="Electronics & Communication Engineering">Electronics & Communication Engineering (ECE)</option>
+            <option value="Electrical & Electronics Engineering">Electrical & Electronics Engineering (EEE)</option>
+            <option value="Mechanical Engineering">Mechanical Engineering (MECH)</option>
+          </select>
+        </div>
+
+        <!-- Student Only Field Group -->
+        <div id="group-student-fields">
+          <div class="form-group">
+            <label class="form-label" for="signup-batch">Current Year / Batch</label>
+            <select id="signup-batch" class="form-control">
+              <option value="Final Year (2026)">Final Year (2026)</option>
+              <option value="3rd Year (2027)">3rd Year (2027)</option>
+              <option value="2nd Year (2028)">2nd Year (2028)</option>
+              <option value="1st Year (2029)">1st Year (2029)</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Alumni Only Field Group -->
+        <div id="group-alumni-fields" style="display: none;">
+          <div class="form-group">
+            <label class="form-label" for="signup-grad-year">Graduation Batch Year</label>
+            <input type="number" id="signup-grad-year" class="form-control" placeholder="e.g. 2020" min="2010" max="2025" value="2020">
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+            <div class="form-group">
+              <label class="form-label" for="signup-company">Current Company</label>
+              <input type="text" id="signup-company" class="form-control" placeholder="e.g. Zoho / Microsoft">
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="signup-jobrole">Job Role / Title</label>
+              <input type="text" id="signup-jobrole" class="form-control" placeholder="e.g. Software Engineer">
+            </div>
+          </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+          <div class="form-group">
+            <label class="form-label" for="signup-password">Password</label>
+            <input type="password" id="signup-password" class="form-control" placeholder="••••••••" required minlength="6">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="signup-confirm-password">Confirm Password</label>
+            <input type="password" id="signup-confirm-password" class="form-control" placeholder="••••••••" required minlength="6">
+          </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-block btn-lg" id="signup-submit-btn" style="margin-top: 10px;">
+          Create Account →
+        </button>
+      </form>
+
+      <div style="margin-top: 24px; text-align: center; padding-top: 16px; border-top: 1px solid var(--border-default);">
+        <p class="text-sm text-muted">
+          Already have an account? <a href="login.html" id="link-goto-login" style="font-weight: 600;">Log in</a>
+        </p>
+        <p class="text-xs text-muted" style="margin-top: 10px;">
+          <a href="index.html">← Back to home</a>
+        </p>
+      </div>
+
+    </div>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/config.js"></script>
+  <script src="js/supabase-client.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/realtime.js"></script>
+  <script src="js/pages/auth-page.js"></script>
+</body>
+</html>
+

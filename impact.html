@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Platform Impact — AlumniX</title>
+  <meta name="description" content="Karpagam Institute of Technology AlumniX network impact metrics, connections, and referral statistics.">
+  <link rel="stylesheet" href="css/styles.css">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body style="background-color: var(--bg-page);">
+
+  <header class="top-header" style="max-width: 1200px; margin: 0 auto; background: transparent; border: none;">
+    <a href="index.html" class="logo-wrapper">
+      <div class="logo-emblem">✨</div>
+      <span><span class="logo-text-dark">Alumni</span><span class="logo-text-x">X</span></span>
+    </a>
+    <div style="display: flex; gap: 12px;">
+      <a href="dashboard.html" class="btn btn-secondary btn-sm">Go to Dashboard</a>
+    </div>
+  </header>
+
+  <main class="page-wrapper" style="padding-top: 40px; padding-bottom: 80px;">
+    
+    <div style="text-align: center; max-width: 720px; margin: 0 auto 50px auto;">
+      <span class="pill pill-green" style="margin-bottom: 12px;">🌐 Ecosystem Impact</span>
+      <h1 style="font-size: 2.75rem; font-weight: 800; margin-bottom: 12px;">Platform Analytics & Impact</h1>
+      <p class="text-muted" style="font-size: 1.1rem;">
+        Real-time aggregate network metrics connecting Karpagam Institute of Technology students to alumni leadership.
+      </p>
+    </div>
+
+    <!-- Impact Stats Grid -->
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 24px; margin-bottom: 48px;" id="impact-stats-grid">
+      
+      <div class="stat-card" style="padding: 28px;">
+        <div>
+          <div class="stat-label">Mentorship Connections</div>
+          <div class="stat-value" id="val-connections">312</div>
+        </div>
+        <div class="stat-icon-chip">🤝</div>
+      </div>
+
+      <div class="stat-card" style="padding: 28px;">
+        <div>
+          <div class="stat-label">Jobs via Referral</div>
+          <div class="stat-value" id="val-jobs">94</div>
+        </div>
+        <div class="stat-icon-chip">💼</div>
+      </div>
+
+      <div class="stat-card" style="padding: 28px;">
+        <div>
+          <div class="stat-label">Active Alumni Mentors</div>
+          <div class="stat-value" id="val-mentors">320</div>
+        </div>
+        <div class="stat-icon-chip">🎓</div>
+      </div>
+
+      <div class="stat-card" style="padding: 28px;">
+        <div>
+          <div class="stat-label">Avg Response Time</div>
+          <div class="stat-value" id="val-response">4.2 hrs</div>
+        </div>
+        <div class="stat-icon-chip">⚡</div>
+      </div>
+
+    </div>
+
+    <!-- Additional Overview Cards -->
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 24px;">
+      
+      <div class="card" style="padding: 32px;">
+        <h3 style="font-size: 1.3rem; margin-bottom: 12px;">Top Hiring Employers</h3>
+        <p class="text-sm text-muted" style="margin-bottom: 20px;">KIT Alumni are actively referring students into industry-leading companies:</p>
+        
+        <div style="display: flex; flex-wrap: wrap; gap: 10px;">
+          <span class="pill pill-neutral" style="padding: 8px 16px; font-size: 0.9rem;">Zoho Corporation</span>
+          <span class="pill pill-neutral" style="padding: 8px 16px; font-size: 0.9rem;">Freshworks</span>
+          <span class="pill pill-neutral" style="padding: 8px 16px; font-size: 0.9rem;">Microsoft</span>
+          <span class="pill pill-neutral" style="padding: 8px 16px; font-size: 0.9rem;">Amazon Web Services</span>
+          <span class="pill pill-neutral" style="padding: 8px 16px; font-size: 0.9rem;">Bosch Global</span>
+          <span class="pill pill-neutral" style="padding: 8px 16px; font-size: 0.9rem;">Tata Consultancy Services</span>
+        </div>
+      </div>
+
+      <div class="card" style="padding: 32px; background: linear-gradient(135deg, #FFFFFF 0%, #F5FAF6 100%); border: 1px solid var(--border-hover);">
+        <h3 style="font-size: 1.3rem; margin-bottom: 12px;">Institutional Engagement</h3>
+        <p class="text-sm text-muted" style="margin-bottom: 20px;">Departmental distribution across active alumni mentorship pools:</p>
+        
+        <div style="display: flex; flex-direction: column; gap: 12px;">
+          <div>
+            <div style="display: flex; justify-content: space-between; font-size: 0.85rem; font-weight: 600; margin-bottom: 4px;">
+              <span>Computer Science & Engineering</span>
+              <span>38%</span>
+            </div>
+            <div class="progress-bar-bg"><div class="progress-bar-fill" style="width: 38%;"></div></div>
+          </div>
+          <div>
+            <div style="display: flex; justify-content: space-between; font-size: 0.85rem; font-weight: 600; margin-bottom: 4px;">
+              <span>AI & Data Science</span>
+              <span>28%</span>
+            </div>
+            <div class="progress-bar-bg"><div class="progress-bar-fill" style="width: 28%;"></div></div>
+          </div>
+          <div>
+            <div style="display: flex; justify-content: space-between; font-size: 0.85rem; font-weight: 600; margin-bottom: 4px;">
+              <span>Information Technology & ECE</span>
+              <span>22%</span>
+            </div>
+            <div class="progress-bar-bg"><div class="progress-bar-fill" style="width: 22%;"></div></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  </main>
+
+  <footer style="border-top: 1px solid var(--border-default); padding: 24px; text-align: center; font-size: 0.85rem; color: var(--text-secondary);">
+    <p>© 2026 AlumniX — Karpagam Institute of Technology Alumni Platform.</p>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/config.js"></script>
+  <script src="js/supabase-client.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/realtime.js"></script>
+  <script src="js/pages/impact.js"></script>
+</body>
+</html>
+

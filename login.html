@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Log in — AlumniX</title>
+  <link rel="stylesheet" href="css/styles.css">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body style="background-color: var(--bg-page); display: flex; flex-direction: column; min-height: 100vh;">
+
+  <div style="padding: 24px 32px;">
+    <a href="index.html" class="logo-wrapper">
+      <div class="logo-emblem">✨</div>
+      <span><span class="logo-text-dark">Alumni</span><span class="logo-text-x">X</span></span>
+    </a>
+  </div>
+
+  <main style="flex: 1; display: flex; align-items: center; justify-content: center; padding: 20px;">
+    <div class="card" style="width: 100%; max-width: 440px; padding: 32px;">
+      
+      <!-- Role Selection Segmented Toggle -->
+      <div class="segmented-toggle" id="auth-role-toggle">
+        <button type="button" class="segmented-toggle-btn active" data-role="student" id="role-toggle-student">
+          <span>🎓</span> Student
+        </button>
+        <button type="button" class="segmented-toggle-btn" data-role="alumni" id="role-toggle-alumni">
+          <span>💼</span> Alumnus
+        </button>
+      </div>
+
+      <div style="text-align: center; margin-bottom: 24px;">
+        <h2 style="font-size: 1.6rem;" id="auth-heading">Welcome Back</h2>
+        <p class="text-sm text-muted" id="auth-subheading">Continue your journey as a student</p>
+      </div>
+
+      <!-- Alert Box for Error / Success Messages -->
+      <div id="auth-alert-container" style="display: none;"></div>
+
+      <!-- Login Form -->
+      <form id="login-form">
+        <div class="form-group">
+          <label class="form-label" for="login-email">Email Address</label>
+          <input type="email" id="login-email" class="form-control" placeholder="name@kite.ac.in" required>
+        </div>
+
+        <div class="form-group">
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <label class="form-label" for="login-password">Password</label>
+          </div>
+          <input type="password" id="login-password" class="form-control" placeholder="••••••••" required>
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-block btn-lg" id="login-submit-btn" style="margin-top: 10px;">
+          Log in →
+        </button>
+      </form>
+
+      <div style="margin-top: 24px; text-align: center; padding-top: 16px; border-top: 1px solid var(--border-default);">
+        <p class="text-sm text-muted">
+          New to AlumniX? <a href="signup.html" id="link-goto-signup" style="font-weight: 600;">Sign up for an account</a>
+        </p>
+        <p class="text-xs text-muted" style="margin-top: 10px;">
+          <a href="index.html">← Back to home</a>
+        </p>
+      </div>
+
+    </div>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/config.js"></script>
+  <script src="js/supabase-client.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/realtime.js"></script>
+  <script src="js/pages/auth-page.js"></script>
+</body>
+</html>
+

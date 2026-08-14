@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Job & Referral Board — AlumniX</title>
+  <link rel="stylesheet" href="css/styles.css">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+
+  <div id="top-header-container"></div>
+  <div id="sidebar-container"></div>
+
+  <main class="main-content">
+    <div class="page-wrapper">
+      
+      <!-- Page Header & Action -->
+      <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px; margin-bottom: 24px;">
+        <div>
+          <h1 style="font-size: 2rem; margin-bottom: 4px;">Referral & Job Board</h1>
+          <p class="text-sm text-muted">Exclusive job openings and referral opportunities posted directly by KIT Alumni.</p>
+        </div>
+        <div id="jobs-header-action"></div>
+      </div>
+
+      <!-- Tabs Bar (for Alumni) -->
+      <div id="jobs-tabs-container" style="display: none; margin-bottom: 20px;">
+        <div class="segmented-toggle" style="max-width: 320px; margin-bottom: 0;">
+          <button type="button" class="segmented-toggle-btn active" id="tab-all-jobs">All Listings</button>
+          <button type="button" class="segmented-toggle-btn" id="tab-my-jobs">My Posted Jobs</button>
+        </div>
+      </div>
+
+      <!-- Job Cards List -->
+      <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 24px;" id="jobs-grid-container">
+        <div class="card animate-pulse" style="padding: 24px;">Loading job listings...</div>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Post a Job Modal (Alumni) -->
+  <div class="modal-overlay" id="post-job-modal">
+    <div class="modal-card" style="max-width: 580px;">
+      <button class="modal-close-btn" id="job-modal-close-x">✕</button>
+      <div style="margin-bottom: 20px;">
+        <span class="pill pill-green">Referral Listing</span>
+        <h2 style="font-size: 1.4rem; margin-top: 6px;">Post Opportunity for KIT Juniors</h2>
+      </div>
+
+      <form id="post-job-form">
+        
+        <div class="form-group">
+          <label class="form-label" for="job-title">Job Title / Position</label>
+          <input type="text" id="job-title" class="form-control" placeholder="e.g. Associate Backend Developer" required>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+          <div class="form-group">
+            <label class="form-label" for="job-company">Company</label>
+            <input type="text" id="job-company" class="form-control" placeholder="e.g. Zoho / Freshworks" required>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="job-location">Location</label>
+            <input type="text" id="job-location" class="form-control" placeholder="e.g. Chennai / Remote" required>
+          </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+          <div class="form-group">
+            <label class="form-label" for="job-type">Employment Type</label>
+            <select id="job-type" class="form-control">
+              <option value="Full-time">Full-time</option>
+              <option value="Internship">Internship</option>
+              <option value="Part-time">Part-time</option>
+              <option value="Contract">Contract</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="job-tag">Category Tag</label>
+            <input type="text" id="job-tag" class="form-control" placeholder="e.g. Backend / React / AI">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="job-description">Job Description & Referral Notes</label>
+          <textarea id="job-description" class="form-control" rows="4" placeholder="Detail role requirements and how KIT candidates should request a referral..." required></textarea>
+        </div>
+
+        <div style="display: flex; justify-content: flex-end; gap: 12px; margin-top: 20px;">
+          <button type="button" class="btn btn-secondary" id="job-modal-cancel-btn">Cancel</button>
+          <button type="submit" class="btn btn-primary" id="job-modal-submit-btn">Publish Job Post →</button>
+        </div>
+
+      </form>
+    </div>
+  </div>
+
+  <div id="bottom-nav-container"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/config.js"></script>
+  <script src="js/supabase-client.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/realtime.js"></script>
+  <script src="js/role-shell.js"></script>
+  <script src="js/pages/jobs.js"></script>
+</body>
+</html>
+

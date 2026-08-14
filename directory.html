@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Alumni Directory — AlumniX</title>
+  <link rel="stylesheet" href="css/styles.css">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+
+  <div id="top-header-container"></div>
+  <div id="sidebar-container"></div>
+
+  <main class="main-content">
+    <div class="page-wrapper">
+      
+      <!-- Page Title -->
+      <div style="margin-bottom: 24px;">
+        <h1 style="font-size: 2rem; margin-bottom: 4px;">Alumni Directory</h1>
+        <p class="text-sm text-muted">Browse and connect with verified Karpagam Institute of Technology graduates.</p>
+      </div>
+
+      <!-- Search & Filters Bar -->
+      <div class="card" style="margin-bottom: 28px; padding: 20px;">
+        <div style="display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 16px;">
+          
+          <div class="form-group" style="margin-bottom: 0;">
+            <label class="form-label" for="dir-search-input">Search Alumni</label>
+            <input type="text" id="dir-search-input" class="form-control" placeholder="Search by name, company (e.g. Zoho, Microsoft), or role...">
+          </div>
+
+          <div class="form-group" style="margin-bottom: 0;">
+            <label class="form-label" for="dir-dept-filter">Department</label>
+            <select id="dir-dept-filter" class="form-control">
+              <option value="All">All Departments</option>
+              <option value="Computer Science & Engineering">Computer Science & Engineering</option>
+              <option value="Artificial Intelligence & Data Science">AI & Data Science</option>
+              <option value="Information Technology">Information Technology</option>
+              <option value="Electronics & Communication Engineering">Electronics & Communication</option>
+              <option value="Mechanical Engineering">Mechanical Engineering</option>
+            </select>
+          </div>
+
+          <div class="form-group" style="margin-bottom: 0;">
+            <label class="form-label" for="dir-industry-filter">Industry</label>
+            <select id="dir-industry-filter" class="form-control">
+              <option value="All">All Industries</option>
+              <option value="Software Development">Software Development</option>
+              <option value="SaaS">SaaS</option>
+              <option value="Artificial Intelligence">Artificial Intelligence</option>
+              <option value="Cloud Computing">Cloud Computing</option>
+              <option value="Automotive & IoT">Automotive & IoT</option>
+            </select>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Count Header -->
+      <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px;">
+        <h3 style="font-size: 1.1rem;" id="directory-count-label">Showing Alumni (0)</h3>
+        <span class="pill pill-green">Verified KIT Alumni Network</span>
+      </div>
+
+      <!-- Alumni Cards Grid -->
+      <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 24px;" id="alumni-cards-grid">
+        <div class="card animate-pulse" style="padding: 24px;">Loading directory...</div>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Request Mentorship Modal -->
+  <div class="modal-overlay" id="dir-mentorship-modal">
+    <div class="modal-card">
+      <button class="modal-close-btn" id="dir-modal-close-x">✕</button>
+      <div style="margin-bottom: 20px;">
+        <span class="pill pill-green">Mentorship Request</span>
+        <h2 style="font-size: 1.4rem; margin-top: 6px;" id="dir-modal-alumni-name">Connect with Mentor</h2>
+        <p class="text-sm text-muted" id="dir-modal-alumni-subtitle">Senior Engineer @ Zoho</p>
+      </div>
+
+      <form id="dir-mentorship-request-form">
+        <input type="hidden" id="dir-modal-alumni-id">
+        <div class="form-group">
+          <label class="form-label" for="dir-request-message">Introduction Message</label>
+          <textarea id="dir-request-message" class="form-control" rows="4" placeholder="Introduce yourself, your current year at KIT, and what advice you are looking for..." required></textarea>
+        </div>
+
+        <div style="display: flex; justify-content: flex-end; gap: 12px; margin-top: 20px;">
+          <button type="button" class="btn btn-secondary" id="dir-modal-cancel-btn">Cancel</button>
+          <button type="submit" class="btn btn-primary" id="dir-modal-submit-btn">Send Request →</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div id="bottom-nav-container"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/config.js"></script>
+  <script src="js/supabase-client.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/realtime.js"></script>
+  <script src="js/role-shell.js"></script>
+  <script src="js/pages/directory.js"></script>
+</body>
+</html>
+
