@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AlumniX Debug - Check Configuration</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .section {
+            background: white;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+        }
+        .section h2 {
+            margin-top: 0;
+            color: #333;
+        }
+        .status {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+        .status.ok {
+            background: #d4edda;
+            color: #155724;
+        }
+        .status.error {
+            background: #f8d7da;
+            color: #721c24;
+        }
+        .code {
+            background: #f0f0f0;
+            padding: 10px;
+            border-radius: 4px;
+            font-family: monospace;
+            overflow-x: auto;
+            margin: 10px 0;
+        }
+        button {
+            background: #667eea;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px 5px 5px 0;
+        }
+        button:hover {
+            background: #764ba2;
+        }
+        .log {
+            background: #1e1e1e;
+            color: #00ff00;
+            padding: 15px;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 12px;
+            max-height: 300px;
+            overflow-y: auto;
+            margin: 10px 0;
+        }
+        .log-entry {
+            margin: 5px 0;
+            padding: 5px;
+            border-bottom: 1px solid #333;
+        }
+        .log-error {
+            color: #ff6b6b;
+        }
+        .log-success {
+            color: #51cf66;
+        }
+        .log-info {
+            color: #74c0fc;
+        }
+    </style>
+</head>
+<body>
+    <h1>🔍 AlumniX Debug Console</h1>
+    <p>This page will help diagnose signup and login issues.</p>
+
+    <div class="section">
+        <h2>1. Configuration Check</h2>
+        <div id="configCheck"></div>
+        <button onclick="checkConfig()">Re-check Config</button>
+    </div>
+
+    <div class="section">
+        <h2>2. Supabase Initialization</h2>
+        <div id="supabaseCheck"></div>
+        <button onclick="checkSupabase()">Re-check Supabase</button>
+    </div>
+
+    <div class="section">
+        <h2>3. Test Student Signup</h2>
+        <input type="email" id="testEmail" placeholder="test@gmail.com" value="testuser@gmail.com">
+        <input type="password" id="testPassword" placeholder="Password123" value="Password123">
+        <button onclick="testStudentSignup()">Test Student Signup</button>
+        <div id="signupLog" class="log"></div>
+    </div>
+
+    <div class="section">
+        <h2>4. Test Login</h2>
+        <input type="email" id="loginEmail" placeholder="email@gmail.com" value="testuser@gmail.com">
+        <input type="password" id="loginPassword" placeholder="Password123" value="Password123">
+        <button onclick="testLogin()">Test Login</button>
+        <div id="loginLog" class="log"></div>
+    </div>
+
+    <div class="section">
+        <h2>5. Console Output</h2>
+        <button onclick="clearLogs()">Clear Logs</button>
+        <div id="consoleLogs" class="log"></div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.0.0/dist/module.js"></script>
+    <script src="js/config.js"></script>
+    <script src="js/supabase-client.js"></script>
+
+    <script>
+        // Redirect console logs
+        const logDiv = document.getElementById('consoleLogs');
+        const originalLog = console.log;
+        const originalError = console.error;
+        const originalWarn = console.warn;
+
+        function addLog(message, type = 'info') {
+            const entry = document.createElement('div');
+            entry.className = `log-entry log-${type}`;
+            entry.textContent = `[${new Date().toLocaleTimeString()}] ${message}`;
+            logDiv.appendChild(entry);
+            logDiv.scrollTop = logDiv.scrollHeight;
+        }
+
+        console.log = function(...args) {
+            originalLog(...args);
+            addLog(args.join(' '), 'info');
+        };
+
+        console.error = function(...args) {
+            originalError(...args);
+            addLog(args.join(' '), 'error');
+        };
+
+        console.warn = function(...args) {
+            originalWarn(...args);
+            addLog(args.join(' '), 'error');
+        };
+
+        function checkConfig() {
+            const div = document.getElementById('configCheck');
+            div.innerHTML = '';
+
+            if (!window.ALUMNIX_CONFIG) {
+                div.innerHTML += '<div class="status error">❌ ALUMNIX_CONFIG not found</div>';
+                return;
+            }
+
+            const config = window.ALUMNIX_CONFIG;
+            div.innerHTML += `
+                <div class="status ok">✅ Config loaded</div>
+                <div class="code">
+                    SUPABASE_URL: ${config.SUPABASE_URL || '❌ MISSING'}<br>
+                    SUPABASE_ANON_KEY: ${config.SUPABASE_ANON_KEY ? '✅ Present' : '❌ MISSING'}<br>
+                    API_BASE_URL: ${config.API_BASE_URL || '❌ MISSING'}
+                </div>
+            `;
+        }
+
+        function checkSupabase() {
+            const div = document.getElementById('supabaseCheck');
+            div.innerHTML = '';
+
+            if (!window.supabase) {
+                div.innerHTML += '<div class="status error">❌ Supabase library not loaded</div>';
+                return;
+            }
+
+            div.innerHTML += '<div class="status ok">✅ Supabase library loaded</div>';
+
+            if (!window.supabaseClient) {
+                div.innerHTML += '<div class="status error">❌ Supabase client not initialized</div>';
+                return;
+            }
+
+            div.innerHTML += '<div class="status ok">✅ Supabase client initialized</div>';
+
+            if (!window.supabaseClient.auth) {
+                div.innerHTML += '<div class="status error">❌ Supabase auth not available</div>';
+                return;
+            }
+
+            div.innerHTML += '<div class="status ok">✅ Supabase auth available</div>';
+        }
+
+        async function testStudentSignup() {
+            const log = document.getElementById('signupLog');
+            log.innerHTML = '';
+
+            function addSignupLog(msg, type = 'info') {
+                const entry = document.createElement('div');
+                entry.className = `log-entry log-${type}`;
+                entry.textContent = msg;
+                log.appendChild(entry);
+                log.scrollTop = log.scrollHeight;
+            }
+
+            try {
+                addSignupLog('Starting student signup test...', 'info');
+
+                const email = document.getElementById('testEmail').value;
+                const password = document.getElementById('testPassword').value;
+
+                if (!email || !password) {
+                    addSignupLog('❌ Email and password required', 'error');
+                    return;
+                }
+
+                addSignupLog(`Email: ${email}`, 'info');
+                addSignupLog(`Password length: ${password.length}`, 'info');
+
+                if (!window.supabaseClient) {
+                    addSignupLog('❌ Supabase client not initialized', 'error');
+                    return;
+                }
+
+                addSignupLog('Calling Supabase auth.signUp...', 'info');
+
+                const { data, error } = await window.supabaseClient.auth.signUp({
+                    email,
+                    password,
+                    options: {
+                        data: {
+                            full_name: 'Test User',
+                            role: 'student',
+                            department: 'Computer Science',
+                            batch: 2024
+                        }
+                    }
+                });
+
+                if (error) {
+                    addSignupLog(`❌ Supabase Error: ${error.message}`, 'error');
+                    addSignupLog(`Error Code: ${error.status}`, 'error');
+                    addSignupLog(`Full Error: ${JSON.stringify(error)}`, 'error');
+                    return;
+                }
+
+                if (!data.user) {
+                    addSignupLog('❌ No user returned from signup', 'error');
+                    return;
+                }
+
+                addSignupLog(`✅ SUCCESS! User ID: ${data.user.id}`, 'success');
+                addSignupLog(`User Email: ${data.user.email}`, 'success');
+
+            } catch (err) {
+                addSignupLog(`❌ Exception: ${err.message}`, 'error');
+                addSignupLog(`Stack: ${err.stack}`, 'error');
+            }
+        }
+
+        async function testLogin() {
+            const log = document.getElementById('loginLog');
+            log.innerHTML = '';
+
+            function addLoginLog(msg, type = 'info') {
+                const entry = document.createElement('div');
+                entry.className = `log-entry log-${type}`;
+                entry.textContent = msg;
+                log.appendChild(entry);
+                log.scrollTop = log.scrollHeight;
+            }
+
+            try {
+                addLoginLog('Starting login test...', 'info');
+
+                const email = document.getElementById('loginEmail').value;
+                const password = document.getElementById('loginPassword').value;
+
+                if (!email || !password) {
+                    addLoginLog('❌ Email and password required', 'error');
+                    return;
+                }
+
+                addLoginLog(`Email: ${email}`, 'info');
+
+                if (!window.supabaseClient) {
+                    addLoginLog('❌ Supabase client not initialized', 'error');
+                    return;
+                }
+
+                addLoginLog('Calling Supabase auth.signInWithPassword...', 'info');
+
+                const { data, error } = await window.supabaseClient.auth.signInWithPassword({
+                    email,
+                    password
+                });
+
+                if (error) {
+                    addLoginLog(`❌ Login Error: ${error.message}`, 'error');
+                    addLoginLog(`Error Code: ${error.status}`, 'error');
+                    return;
+                }
+
+                if (!data.user) {
+                    addLoginLog('❌ No user returned from login', 'error');
+                    return;
+                }
+
+                addLoginLog(`✅ SUCCESS! Logged in as: ${data.user.email}`, 'success');
+                addLoginLog(`User ID: ${data.user.id}`, 'success');
+
+            } catch (err) {
+                addLoginLog(`❌ Exception: ${err.message}`, 'error');
+            }
+        }
+
+        function clearLogs() {
+            document.getElementById('consoleLogs').innerHTML = '';
+        }
+
+        // Run initial checks
+        window.addEventListener('load', () => {
+            checkConfig();
+            checkSupabase();
+            addLog('Debug page loaded - ready for testing', 'info');
+        });
+    </script>
+</body>
+</html>
