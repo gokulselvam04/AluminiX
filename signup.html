@@ -87,6 +87,9 @@
             font-size: 13px;
             display: none;
             animation: slideIn 0.3s ease;
+            max-height: 200px;
+            overflow-y: auto;
+            word-wrap: break-word;
         }
 
         @keyframes slideIn {
@@ -238,26 +241,26 @@
             <div id="alert" class="alert"></div>
 
             <div class="role-tabs">
-                <button class="role-tab active" data-role="student">Student</button>
-                <button class="role-tab" data-role="alumni">Alumni</button>
+                <button class="role-tab active" data-role="student" type="button">Student</button>
+                <button class="role-tab" data-role="alumni" type="button">Alumni</button>
             </div>
 
             <form id="signupForm">
                 <!-- Student Form -->
                 <div id="studentSection" class="form-section active">
                     <div class="form-group">
-                        <label>Full Name</label>
-                        <input type="text" id="studentName" placeholder="John Doe" required>
+                        <label for="studentName">Full Name</label>
+                        <input type="text" id="studentName" name="studentName" placeholder="John Doe" required>
                     </div>
 
                     <div class="form-group">
-                        <label>Email Address</label>
-                        <input type="email" id="studentEmail" placeholder="john@gmail.com" required>
+                        <label for="studentEmail">Email Address</label>
+                        <input type="email" id="studentEmail" name="studentEmail" placeholder="john@gmail.com" required>
                     </div>
 
                     <div class="form-group">
-                        <label>Department</label>
-                        <select id="studentDept" required>
+                        <label for="studentDept">Department</label>
+                        <select id="studentDept" name="studentDept" required>
                             <option value="">Select your department</option>
                             <option value="Computer Science">Computer Science & Engineering</option>
                             <option value="Electronics">Electronics & Communication</option>
@@ -270,36 +273,36 @@
 
                     <div class="form-row">
                         <div class="form-group">
-                            <label>Batch Year</label>
-                            <input type="number" id="studentBatch" placeholder="2024" min="2020" max="2030" required>
+                            <label for="studentBatch">Batch Year</label>
+                            <input type="number" id="studentBatch" name="studentBatch" placeholder="2024" min="2020" max="2030" required>
                         </div>
                         <div class="form-group">
-                            <label>Password</label>
-                            <input type="password" id="studentPass" placeholder="Min 8 characters" required>
+                            <label for="studentPass">Password</label>
+                            <input type="password" id="studentPass" name="studentPass" placeholder="Min 8 characters" required>
                         </div>
                     </div>
 
                     <div class="form-group">
-                        <label>Confirm Password</label>
-                        <input type="password" id="studentPassConfirm" placeholder="Confirm password" required>
+                        <label for="studentPassConfirm">Confirm Password</label>
+                        <input type="password" id="studentPassConfirm" name="studentPassConfirm" placeholder="Confirm password" required>
                     </div>
                 </div>
 
                 <!-- Alumni Form -->
                 <div id="alumniSection" class="form-section">
                     <div class="form-group">
-                        <label>Full Name</label>
-                        <input type="text" id="alumniName" placeholder="Jane Smith" required>
+                        <label for="alumniName">Full Name</label>
+                        <input type="text" id="alumniName" name="alumniName" placeholder="Jane Smith" required>
                     </div>
 
                     <div class="form-group">
-                        <label>Email Address</label>
-                        <input type="email" id="alumniEmail" placeholder="jane@company.com" required>
+                        <label for="alumniEmail">Email Address</label>
+                        <input type="email" id="alumniEmail" name="alumniEmail" placeholder="jane@company.com" required>
                     </div>
 
                     <div class="form-group">
-                        <label>Department (During Study)</label>
-                        <select id="alumniDept" required>
+                        <label for="alumniDept">Department (During Study)</label>
+                        <select id="alumniDept" name="alumniDept" required>
                             <option value="">Select your department</option>
                             <option value="Computer Science">Computer Science & Engineering</option>
                             <option value="Electronics">Electronics & Communication</option>
@@ -312,28 +315,28 @@
 
                     <div class="form-row">
                         <div class="form-group">
-                            <label>Graduation Year</label>
-                            <input type="number" id="alumniYear" placeholder="2020" min="1990" max="2024" required>
+                            <label for="alumniYear">Graduation Year</label>
+                            <input type="number" id="alumniYear" name="alumniYear" placeholder="2020" min="1990" max="2024" required>
                         </div>
                         <div class="form-group">
-                            <label>Company</label>
-                            <input type="text" id="alumniCompany" placeholder="Tech Corp" required>
+                            <label for="alumniCompany">Company</label>
+                            <input type="text" id="alumniCompany" name="alumniCompany" placeholder="Tech Corp" required>
                         </div>
                     </div>
 
                     <div class="form-group">
-                        <label>Job Title</label>
-                        <input type="text" id="alumniTitle" placeholder="Senior Engineer" required>
+                        <label for="alumniTitle">Job Title</label>
+                        <input type="text" id="alumniTitle" name="alumniTitle" placeholder="Senior Engineer" required>
                     </div>
 
                     <div class="form-row">
                         <div class="form-group">
-                            <label>Password</label>
-                            <input type="password" id="alumniPass" placeholder="Min 8 characters" required>
+                            <label for="alumniPass">Password</label>
+                            <input type="password" id="alumniPass" name="alumniPass" placeholder="Min 8 characters" required>
                         </div>
                         <div class="form-group">
-                            <label>Confirm Password</label>
-                            <input type="password" id="alumniPassConfirm" placeholder="Confirm password" required>
+                            <label for="alumniPassConfirm">Confirm Password</label>
+                            <input type="password" id="alumniPassConfirm" name="alumniPassConfirm" placeholder="Confirm password" required>
                         </div>
                     </div>
                 </div>
@@ -352,36 +355,36 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.0.0/dist/module.js"></script>
     <script src="js/config.js"></script>
     <script src="js/supabase-client.js"></script>
-    <script src="js/api.js"></script>
 
     <script>
-        // Wait for Supabase to be ready
-        async function waitForSupabase(maxAttempts = 10) {
-            for (let i = 0; i < maxAttempts; i++) {
-                if (window.supabaseClient && window.supabaseClient.auth) {
-                    console.log('[Signup] ✅ Supabase client ready');
-                    return true;
-                }
-                await new Promise(resolve => setTimeout(resolve, 100));
-            }
-            console.error('[Signup] ❌ Supabase client not ready after waiting');
-            return false;
-        }
-
+        console.log('[Signup] Page loaded');
+        
         let activeRole = 'student';
 
-        // Initialize on DOM ready
-        function initializeForm() {
-            console.log('[Signup] Initializing form');
+        // Show alert with detailed error info
+        function showAlert(msg, type = 'error') {
+            const alert = document.getElementById('alert');
+            alert.textContent = msg;
+            alert.className = `alert show ${type}`;
+            console.error(`[ALERT] ${type}: ${msg}`);
+            window.scrollTo(0, 0);
+        }
+
+        // Initialize form
+        function setupForm() {
+            console.log('[Signup] Setting up form');
             
+            // Role tab listeners
             document.querySelectorAll('.role-tab').forEach(tab => {
-                tab.addEventListener('click', function(e) {
+                tab.addEventListener('click', (e) => {
                     e.preventDefault();
+                    console.log('[Signup] Switching role to:', tab.dataset.role);
+                    
                     document.querySelectorAll('.role-tab').forEach(t => t.classList.remove('active'));
                     document.querySelectorAll('.form-section').forEach(s => s.classList.remove('active'));
                     
-                    this.classList.add('active');
-                    activeRole = this.dataset.role;
+                    tab.classList.add('active');
+                    activeRole = tab.dataset.role;
                     
                     if (activeRole === 'student') {
                         document.getElementById('studentSection').classList.add('active');
@@ -391,54 +394,45 @@
                 });
             });
 
+            // Form submit listener
             const form = document.getElementById('signupForm');
-            if (form) {
-                form.addEventListener('submit', handleSignup);
-            }
+            form.addEventListener('submit', handleSubmit);
+            console.log('[Signup] Form listeners attached');
         }
 
-        function showAlert(msg, type = 'error') {
-            const alert = document.getElementById('alert');
-            alert.textContent = msg;
-            alert.className = `alert show ${type}`;
-            console.log(`[Alert] ${type.toUpperCase()}: ${msg}`);
-        }
-
-        async function handleSignup(e) {
+        async function handleSubmit(e) {
             e.preventDefault();
-            console.log('[Signup] Form submitted, role:', activeRole);
+            console.log('[Signup] Form submitted - role:', activeRole);
             
             const btn = document.getElementById('submitBtn');
-            if (!btn) {
-                console.error('[Signup] Submit button not found');
-                showAlert('Form error - button not found', 'error');
-                return;
-            }
-
             btn.disabled = true;
             btn.innerHTML = '<span class="spinner"></span> Creating account...';
 
             try {
-                // Ensure Supabase is ready
-                const ready = await waitForSupabase();
-                if (!ready) {
-                    throw new Error('Supabase not initialized. Please refresh the page.');
+                // Check Supabase
+                if (!window.supabaseClient) {
+                    throw new Error('Supabase not initialized - try refreshing the page');
+                }
+
+                if (!window.supabaseClient.auth) {
+                    throw new Error('Supabase auth not available');
                 }
 
                 if (activeRole === 'student') {
-                    await signupStudent();
+                    await handleStudentSignup();
                 } else {
-                    await signupAlumni();
+                    await handleAlumniSignup();
                 }
-            } catch (err) {
-                console.error('[Signup] Error:', err);
-                showAlert(err.message || 'Signup failed', 'error');
+            } catch (error) {
+                const errorMsg = error.message || error.toString();
+                console.error('[SIGNUP_ERROR]', error);
+                showAlert(`Error: ${errorMsg}`);
                 btn.disabled = false;
                 btn.innerHTML = 'Create Account';
             }
         }
 
-        async function signupStudent() {
+        async function handleStudentSignup() {
             const name = document.getElementById('studentName').value.trim();
             const email = document.getElementById('studentEmail').value.trim();
             const dept = document.getElementById('studentDept').value;
@@ -446,86 +440,61 @@
             const pass = document.getElementById('studentPass').value;
             const passConfirm = document.getElementById('studentPassConfirm').value;
 
-            console.log('[Signup] Student signup:', { email, name, dept, batch });
+            console.log('[Student Signup] Values:', { name, email, dept, batch, passLength: pass.length });
 
-            if (!name || !email || !dept || !batch || !pass) {
-                throw new Error('Please fill all required fields');
-            }
+            // Validation
+            if (!name) throw new Error('Name is required');
+            if (!email) throw new Error('Email is required');
+            if (!dept) throw new Error('Department is required');
+            if (!batch) throw new Error('Batch year is required');
+            if (!pass) throw new Error('Password is required');
+            if (pass.length < 8) throw new Error('Password must be at least 8 characters');
+            if (pass !== passConfirm) throw new Error('Passwords do not match');
 
-            if (pass !== passConfirm) {
-                throw new Error('Passwords do not match');
-            }
+            console.log('[Student Signup] Validation passed');
 
-            if (pass.length < 8) {
-                throw new Error('Password must be at least 8 characters');
-            }
-
-            console.log('[Signup] Validation passed, calling Supabase');
-
-            // 1. Sign up with Supabase Auth
+            // Call Supabase
+            console.log('[Student Signup] Calling Supabase.auth.signUp...');
             const { data, error } = await window.supabaseClient.auth.signUp({
                 email,
                 password: pass,
-                options: { 
-                    data: { 
-                        full_name: name, 
+                options: {
+                    data: {
+                        full_name: name,
                         role: 'student',
                         department: dept,
                         batch: batch
-                    } 
+                    }
                 }
             });
 
             if (error) {
-                console.error('[Signup] Supabase error:', error);
-                throw new Error(error.message || 'Failed to create account');
+                console.error('[Student Signup] Supabase Error:', error);
+                throw new Error(`Supabase error: ${error.message}`);
             }
 
-            if (!data.user) {
-                throw new Error('Signup failed - no user returned');
+            if (!data || !data.user) {
+                console.error('[Student Signup] No user in response:', data);
+                throw new Error('Account creation failed - no user returned');
             }
 
-            const userId = data.user.id;
-            console.log('[Signup] ✅ User created in Supabase:', userId);
+            console.log('[Student Signup] ✅ Success! User ID:', data.user.id);
 
-            // 2. Call backend to create user record (non-blocking)
-            try {
-                const apiUrl = window.location.origin.includes('5000') 
-                    ? 'http://127.0.0.1:5000/api/auth-complete-signup' 
-                    : '/api/auth-complete-signup';
+            // Save and redirect
+            localStorage.setItem('alumnix_user', JSON.stringify({
+                id: data.user.id,
+                email: email,
+                name: name,
+                role: 'student'
+            }));
 
-                console.log('[Signup] Syncing with backend:', apiUrl);
-
-                const response = await fetch(apiUrl, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        user_id: userId,
-                        email,
-                        full_name: name,
-                        role: 'student',
-                        department: dept
-                    })
-                });
-
-                if (!response.ok) {
-                    console.warn('[Signup] Backend warning (continuing anyway):', response.status);
-                } else {
-                    console.log('[Signup] ✅ Backend synced successfully');
-                }
-            } catch (err) {
-                console.warn('[Signup] Backend sync error (continuing anyway):', err.message);
-            }
-
-            // 3. Save to localStorage and redirect
-            localStorage.setItem('alumnix_user', JSON.stringify({ id: userId, email, name, role: 'student' }));
-            console.log('[Signup] ✅ Account created successfully');
-
-            showAlert('Account created! Redirecting...', 'success');
-            setTimeout(() => { window.location.href = 'profile.html'; }, 1500);
+            showAlert('Account created successfully! Redirecting...', 'success');
+            setTimeout(() => {
+                window.location.href = 'profile.html';
+            }, 1500);
         }
 
-        async function signupAlumni() {
+        async function handleAlumniSignup() {
             const name = document.getElementById('alumniName').value.trim();
             const email = document.getElementById('alumniEmail').value.trim();
             const dept = document.getElementById('alumniDept').value;
@@ -535,93 +504,79 @@
             const pass = document.getElementById('alumniPass').value;
             const passConfirm = document.getElementById('alumniPassConfirm').value;
 
-            console.log('[Signup] Alumni signup:', { email, name, dept, year, company, title });
+            console.log('[Alumni Signup] Values:', { name, email, dept, year, company, title, passLength: pass.length });
 
-            if (!name || !email || !dept || !year || !company || !title || !pass) {
-                throw new Error('Please fill all required fields');
-            }
+            // Validation
+            if (!name) throw new Error('Name is required');
+            if (!email) throw new Error('Email is required');
+            if (!dept) throw new Error('Department is required');
+            if (!year) throw new Error('Graduation year is required');
+            if (!company) throw new Error('Company is required');
+            if (!title) throw new Error('Job title is required');
+            if (!pass) throw new Error('Password is required');
+            if (pass.length < 8) throw new Error('Password must be at least 8 characters');
+            if (pass !== passConfirm) throw new Error('Passwords do not match');
 
-            if (pass !== passConfirm) {
-                throw new Error('Passwords do not match');
-            }
+            console.log('[Alumni Signup] Validation passed');
 
-            if (pass.length < 8) {
-                throw new Error('Password must be at least 8 characters');
-            }
-
-            console.log('[Signup] Validation passed, calling Supabase');
-
-            // 1. Sign up with Supabase Auth
+            // Call Supabase
+            console.log('[Alumni Signup] Calling Supabase.auth.signUp...');
             const { data, error } = await window.supabaseClient.auth.signUp({
                 email,
                 password: pass,
-                options: { 
-                    data: { 
-                        full_name: name, 
+                options: {
+                    data: {
+                        full_name: name,
                         role: 'alumni',
                         department: dept,
                         grad_year: year,
                         company: company,
                         job_role: title
-                    } 
+                    }
                 }
             });
 
             if (error) {
-                console.error('[Signup] Supabase error:', error);
-                throw new Error(error.message || 'Failed to create account');
+                console.error('[Alumni Signup] Supabase Error:', error);
+                throw new Error(`Supabase error: ${error.message}`);
             }
 
-            if (!data.user) {
-                throw new Error('Signup failed - no user returned');
+            if (!data || !data.user) {
+                console.error('[Alumni Signup] No user in response:', data);
+                throw new Error('Account creation failed - no user returned');
             }
 
-            const userId = data.user.id;
-            console.log('[Signup] ✅ User created in Supabase:', userId);
+            console.log('[Alumni Signup] ✅ Success! User ID:', data.user.id);
 
-            // 2. Call backend to create user record (non-blocking)
-            try {
-                const apiUrl = window.location.origin.includes('5000') 
-                    ? 'http://127.0.0.1:5000/api/auth-complete-signup' 
-                    : '/api/auth-complete-signup';
+            // Save and redirect
+            localStorage.setItem('alumnix_user', JSON.stringify({
+                id: data.user.id,
+                email: email,
+                name: name,
+                role: 'alumni'
+            }));
 
-                console.log('[Signup] Syncing with backend:', apiUrl);
-
-                const response = await fetch(apiUrl, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        user_id: userId,
-                        email,
-                        full_name: name,
-                        role: 'alumni',
-                        department: dept
-                    })
-                });
-
-                if (!response.ok) {
-                    console.warn('[Signup] Backend warning (continuing anyway):', response.status);
-                } else {
-                    console.log('[Signup] ✅ Backend synced successfully');
-                }
-            } catch (err) {
-                console.warn('[Signup] Backend sync error (continuing anyway):', err.message);
-            }
-
-            // 3. Save to localStorage and redirect
-            localStorage.setItem('alumnix_user', JSON.stringify({ id: userId, email, name, role: 'alumni' }));
-            console.log('[Signup] ✅ Account created successfully');
-
-            showAlert('Account created! Redirecting...', 'success');
-            setTimeout(() => { window.location.href = 'profile.html'; }, 1500);
+            showAlert('Account created successfully! Redirecting...', 'success');
+            setTimeout(() => {
+                window.location.href = 'profile.html';
+            }, 1500);
         }
 
-        // Initialize when DOM is ready
+        // Setup form when DOM is ready
         if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', initializeForm);
+            document.addEventListener('DOMContentLoaded', setupForm);
         } else {
-            initializeForm();
+            setupForm();
         }
+
+        // Log config status
+        console.log('[Signup] Config status:', {
+            configExists: !!window.ALUMNIX_CONFIG,
+            supabaseUrl: window.ALUMNIX_CONFIG?.SUPABASE_URL ? '✓' : '✗',
+            anonKey: window.ALUMNIX_CONFIG?.SUPABASE_ANON_KEY ? '✓' : '✗',
+            clientExists: !!window.supabaseClient,
+            authExists: !!window.supabaseClient?.auth
+        });
     </script>
 </body>
 </html>
