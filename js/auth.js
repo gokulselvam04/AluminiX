@@ -71,41 +71,70 @@ class AuthService {
       throw new Error("Supabase client is not initialized.");
     }
 
-    // 1. Call Supabase Auth signUp
-    const { data, error } = await window.supabaseClient.auth.signUp({
-      email,
-      password,
-      options: {
-        data: { full_name: fullName, role: 'student', department }
+    let retries = 3;
+    let lastError = null;
+
+    while (retries > 0) {
+      try {
+        // 1. Call Supabase Auth signUp
+        const { data, error } = await window.supabaseClient.auth.signUp({
+          email,
+          password,
+          options: {
+            data: { full_name: fullName, role: 'student', department },
+            emailRedirectTo: window.location.origin
+          }
+        });
+
+        if (error) {
+          if (error.message.includes('rate') || error.message.includes('limit')) {
+            lastError = error;
+            retries--;
+            if (retries > 0) {
+              await new Promise(resolve => setTimeout(resolve, 2000)); // Wait 2 seconds before retry
+              continue;
+            }
+          }
+          throw new Error(error.message);
+        }
+
+        if (!data || !data.user) throw new Error("User creation failed in Supabase Auth.");
+
+        const realUserId = data.user.id;
+
+        // 2. Call backend /api/auth-complete-signup using Service Role client
+        await window.apiClient.post('/api/auth-complete-signup', {
+          user_id: realUserId,
+          email,
+          role: 'student',
+          full_name: fullName,
+          department,
+          institution: 'Karpagam Institute of Technology'
+        });
+
+        const sessionUser = {
+          id: realUserId,
+          email,
+          role: 'student',
+          full_name: fullName,
+          department,
+          institution: 'Karpagam Institute of Technology'
+        };
+
+        this.setCurrentUser(sessionUser);
+        return sessionUser;
+      } catch (err) {
+        if (retries === 0 || !err.message.includes('rate')) {
+          throw err;
+        }
+        retries--;
+        if (retries > 0) {
+          await new Promise(resolve => setTimeout(resolve, 2000));
+        }
       }
-    });
+    }
 
-    if (error) throw new Error(error.message);
-    if (!data || !data.user) throw new Error("User creation failed in Supabase Auth.");
-
-    const realUserId = data.user.id;
-
-    // 2. Call backend /api/auth-complete-signup using Service Role client
-    await window.apiClient.post('/api/auth-complete-signup', {
-      user_id: realUserId,
-      email,
-      role: 'student',
-      full_name: fullName,
-      department,
-      institution: 'Karpagam Institute of Technology'
-    });
-
-    const sessionUser = {
-      id: realUserId,
-      email,
-      role: 'student',
-      full_name: fullName,
-      department,
-      institution: 'Karpagam Institute of Technology'
-    };
-
-    this.setCurrentUser(sessionUser);
-    return sessionUser;
+    throw lastError || new Error("Signup failed after multiple attempts. Please try again later.");
   }
 
   // Alumni Signup Flow
@@ -114,54 +143,83 @@ class AuthService {
       throw new Error("Supabase client is not initialized.");
     }
 
-    // 1. Call Supabase Auth signUp
-    const { data, error } = await window.supabaseClient.auth.signUp({
-      email,
-      password,
-      options: {
-        data: { full_name: fullName, role: 'alumni', department }
+    let retries = 3;
+    let lastError = null;
+
+    while (retries > 0) {
+      try {
+        // 1. Call Supabase Auth signUp
+        const { data, error } = await window.supabaseClient.auth.signUp({
+          email,
+          password,
+          options: {
+            data: { full_name: fullName, role: 'alumni', department },
+            emailRedirectTo: window.location.origin
+          }
+        });
+
+        if (error) {
+          if (error.message.includes('rate') || error.message.includes('limit')) {
+            lastError = error;
+            retries--;
+            if (retries > 0) {
+              await new Promise(resolve => setTimeout(resolve, 2000));
+              continue;
+            }
+          }
+          throw new Error(error.message);
+        }
+
+        if (!data || !data.user) throw new Error("User creation failed in Supabase Auth.");
+
+        const realUserId = data.user.id;
+
+        // 2. Call backend /api/auth-complete-signup
+        await window.apiClient.post('/api/auth-complete-signup', {
+          user_id: realUserId,
+          email,
+          role: 'alumni',
+          full_name: fullName,
+          department,
+          institution: 'Karpagam Institute of Technology'
+        });
+
+        // 3. Pre-register preliminary alumni profile
+        await window.apiClient.post('/api/alumni-profile', {
+          user_id: realUserId,
+          batch_year: parseInt(batchYear) || 2020,
+          department,
+          company,
+          job_role: jobRole,
+          industry: 'Software Development',
+          bio: `KIT Alumnus (${batchYear}). ${jobRole} at ${company}.`,
+          mentor_available: true
+        });
+
+        const sessionUser = {
+          id: realUserId,
+          email,
+          role: 'alumni',
+          full_name: fullName,
+          department,
+          institution: 'Karpagam Institute of Technology',
+          needsProfileSetup: true
+        };
+
+        this.setCurrentUser(sessionUser);
+        return sessionUser;
+      } catch (err) {
+        if (retries === 0 || !err.message.includes('rate')) {
+          throw err;
+        }
+        retries--;
+        if (retries > 0) {
+          await new Promise(resolve => setTimeout(resolve, 2000));
+        }
       }
-    });
+    }
 
-    if (error) throw new Error(error.message);
-    if (!data || !data.user) throw new Error("User creation failed in Supabase Auth.");
-
-    const realUserId = data.user.id;
-
-    // 2. Call backend /api/auth-complete-signup
-    await window.apiClient.post('/api/auth-complete-signup', {
-      user_id: realUserId,
-      email,
-      role: 'alumni',
-      full_name: fullName,
-      department,
-      institution: 'Karpagam Institute of Technology'
-    });
-
-    // 3. Pre-register preliminary alumni profile
-    await window.apiClient.post('/api/alumni-profile', {
-      user_id: realUserId,
-      batch_year: parseInt(batchYear) || 2020,
-      department,
-      company,
-      job_role: jobRole,
-      industry: 'Software Development',
-      bio: `KIT Alumnus (${batchYear}). ${jobRole} at ${company}.`,
-      mentor_available: true
-    });
-
-    const sessionUser = {
-      id: realUserId,
-      email,
-      role: 'alumni',
-      full_name: fullName,
-      department,
-      institution: 'Karpagam Institute of Technology',
-      needsProfileSetup: true
-    };
-
-    this.setCurrentUser(sessionUser);
-    return sessionUser;
+    throw lastError || new Error("Signup failed after multiple attempts. Please try again later.");
   }
 
   // Login Flow
