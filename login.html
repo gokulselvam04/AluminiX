@@ -1,80 +1,342 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Log in — AlumniX</title>
-  <link rel="stylesheet" href="css/styles.css">
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - AlumniX</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .login-container {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            width: 100%;
+            max-width: 450px;
+            padding: 40px;
+        }
+
+        .login-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .login-header h1 {
+            color: #333;
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+
+        .login-header p {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .role-selector {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 20px;
+        }
+
+        .role-btn {
+            flex: 1;
+            padding: 10px 15px;
+            border: none;
+            background: transparent;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            color: #999;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        .role-btn.active {
+            color: #667eea;
+            border-bottom-color: #667eea;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            color: #333;
+            font-weight: 600;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #eee;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: border-color 0.3s ease;
+            font-family: inherit;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .form-group input::placeholder {
+            color: #bbb;
+        }
+
+        .forgot-password {
+            text-align: right;
+            margin-bottom: 20px;
+        }
+
+        .forgot-password a {
+            color: #667eea;
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .forgot-password a:hover {
+            text-decoration: underline;
+        }
+
+        .login-btn {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            margin-bottom: 15px;
+        }
+
+        .login-btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .login-btn:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+        }
+
+        .signup-link {
+            text-align: center;
+            color: #666;
+            font-size: 14px;
+        }
+
+        .signup-link a {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .signup-link a:hover {
+            text-decoration: underline;
+        }
+
+        .alert {
+            padding: 12px 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            display: none;
+            animation: slideDown 0.3s ease;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .alert.show {
+            display: block;
+        }
+
+        .alert.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .alert.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .loading {
+            display: inline-block;
+            width: 14px;
+            height: 14px;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 0.8s linear infinite;
+            margin-right: 8px;
+            vertical-align: middle;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
 </head>
-<body style="background-color: var(--bg-page); display: flex; flex-direction: column; min-height: 100vh;">
-
-  <div style="padding: 24px 32px;">
-    <a href="index.html" class="logo-wrapper">
-      <div class="logo-emblem">✨</div>
-      <span><span class="logo-text-dark">Alumni</span><span class="logo-text-x">X</span></span>
-    </a>
-  </div>
-
-  <main style="flex: 1; display: flex; align-items: center; justify-content: center; padding: 20px;">
-    <div class="card" style="width: 100%; max-width: 440px; padding: 32px;">
-      
-      <!-- Role Selection Segmented Toggle -->
-      <div class="segmented-toggle" id="auth-role-toggle">
-        <button type="button" class="segmented-toggle-btn active" data-role="student" id="role-toggle-student">
-          <span>🎓</span> Student
-        </button>
-        <button type="button" class="segmented-toggle-btn" data-role="alumni" id="role-toggle-alumni">
-          <span>💼</span> Alumnus
-        </button>
-      </div>
-
-      <div style="text-align: center; margin-bottom: 24px;">
-        <h2 style="font-size: 1.6rem;" id="auth-heading">Welcome Back</h2>
-        <p class="text-sm text-muted" id="auth-subheading">Continue your journey as a student</p>
-      </div>
-
-      <!-- Alert Box for Error / Success Messages -->
-      <div id="auth-alert-container" style="display: none;"></div>
-
-      <!-- Login Form -->
-      <form id="login-form">
-        <div class="form-group">
-          <label class="form-label" for="login-email">Email Address</label>
-          <input type="email" id="login-email" class="form-control" placeholder="name@kite.ac.in" required>
+<body>
+    <div class="login-container">
+        <div class="login-header">
+            <h1>AlumniX</h1>
+            <p>Connect with Alumni, Grow Your Career</p>
         </div>
 
-        <div class="form-group">
-          <div style="display: flex; justify-content: space-between; align-items: center;">
-            <label class="form-label" for="login-password">Password</label>
-          </div>
-          <input type="password" id="login-password" class="form-control" placeholder="••••••••" required>
+        <div id="alert" class="alert"></div>
+
+        <div class="role-selector">
+            <button class="role-btn active" data-role="student">Student</button>
+            <button class="role-btn" data-role="alumni">Alumni</button>
         </div>
 
-        <button type="submit" class="btn btn-primary btn-block btn-lg" id="login-submit-btn" style="margin-top: 10px;">
-          Log in →
-        </button>
-      </form>
+        <form id="loginForm">
+            <div class="form-group">
+                <label for="email">Email Address</label>
+                <input 
+                    type="email" 
+                    id="email" 
+                    placeholder="Enter your email" 
+                    required
+                >
+            </div>
 
-      <div style="margin-top: 24px; text-align: center; padding-top: 16px; border-top: 1px solid var(--border-default);">
-        <p class="text-sm text-muted">
-          New to AlumniX? <a href="signup.html" id="link-goto-signup" style="font-weight: 600;">Sign up for an account</a>
-        </p>
-        <p class="text-xs text-muted" style="margin-top: 10px;">
-          <a href="index.html">← Back to home</a>
-        </p>
-      </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input 
+                    type="password" 
+                    id="password" 
+                    placeholder="Enter your password" 
+                    required
+                >
+            </div>
 
+            <div class="forgot-password">
+                <a href="#">Forgot Password?</a>
+            </div>
+
+            <button type="submit" class="login-btn" id="loginBtn">
+                Log In
+            </button>
+        </form>
+
+        <div class="signup-link">
+            Don't have an account? <a href="signup.html">Sign Up</a>
+        </div>
     </div>
-  </main>
 
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="js/config.js"></script>
-  <script src="js/supabase-client.js"></script>
-  <script src="js/api.js"></script>
-  <script src="js/auth.js"></script>
-  <script src="js/realtime.js"></script>
-  <script src="js/pages/auth-page.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.0.0/dist/module.js"></script>
+    <script src="js/config.js"></script>
+    <script src="js/supabase-client.js"></script>
+    <script src="js/api.js"></script>
+
+    <script>
+        let selectedRole = 'student';
+
+        document.querySelectorAll('.role-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.role-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                selectedRole = btn.dataset.role;
+            });
+        });
+
+        function showAlert(message, type = 'error') {
+            const alertBox = document.getElementById('alert');
+            alertBox.textContent = message;
+            alertBox.className = `alert show ${type}`;
+            setTimeout(() => {
+                alertBox.classList.remove('show');
+            }, 5000);
+        }
+
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const email = document.getElementById('email').value.trim();
+            const password = document.getElementById('password').value;
+            const loginBtn = document.getElementById('loginBtn');
+
+            if (!email || !password) {
+                showAlert('Please fill in all fields', 'error');
+                return;
+            }
+
+            loginBtn.disabled = true;
+            loginBtn.innerHTML = '<span class="loading"></span>Logging in...';
+
+            try {
+                const { data, error } = await window.supabaseClient.auth.signInWithPassword({
+                    email,
+                    password
+                });
+
+                if (error) {
+                    throw new Error(error.message);
+                }
+
+                if (!data.user) {
+                    throw new Error('Login failed');
+                }
+
+                showAlert('Login successful! Redirecting...', 'success');
+
+                // Save user to localStorage
+                const user = {
+                    id: data.user.id,
+                    email: data.user.email,
+                    role: selectedRole
+                };
+                localStorage.setItem('alumnix_user', JSON.stringify(user));
+
+                setTimeout(() => {
+                    window.location.href = 'dashboard.html';
+                }, 1500);
+
+            } catch (err) {
+                console.error('Login error:', err);
+                showAlert(err.message || 'Login failed. Please check your credentials.', 'error');
+                loginBtn.disabled = false;
+                loginBtn.innerHTML = 'Log In';
+            }
+        });
+    </script>
 </body>
 </html>
-
