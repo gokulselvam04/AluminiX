@@ -370,35 +370,51 @@
 
         let activeRole = 'student';
 
-        document.querySelectorAll('.role-tab').forEach(tab => {
-            tab.addEventListener('click', () => {
-                document.querySelectorAll('.role-tab').forEach(t => t.classList.remove('active'));
-                document.querySelectorAll('.form-section').forEach(s => s.classList.remove('active'));
-                
-                tab.classList.add('active');
-                activeRole = tab.dataset.role;
-                
-                if (activeRole === 'student') {
-                    document.getElementById('studentSection').classList.add('active');
-                } else {
-                    document.getElementById('alumniSection').classList.add('active');
-                }
+        // Initialize on DOM ready
+        function initializeForm() {
+            console.log('[Signup] Initializing form');
+            
+            document.querySelectorAll('.role-tab').forEach(tab => {
+                tab.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    document.querySelectorAll('.role-tab').forEach(t => t.classList.remove('active'));
+                    document.querySelectorAll('.form-section').forEach(s => s.classList.remove('active'));
+                    
+                    this.classList.add('active');
+                    activeRole = this.dataset.role;
+                    
+                    if (activeRole === 'student') {
+                        document.getElementById('studentSection').classList.add('active');
+                    } else {
+                        document.getElementById('alumniSection').classList.add('active');
+                    }
+                });
             });
-        });
+
+            const form = document.getElementById('signupForm');
+            if (form) {
+                form.addEventListener('submit', handleSignup);
+            }
+        }
 
         function showAlert(msg, type = 'error') {
             const alert = document.getElementById('alert');
             alert.textContent = msg;
             alert.className = `alert show ${type}`;
-            if (type === 'success') {
-                setTimeout(() => alert.classList.remove('show'), 3000);
-            }
+            console.log(`[Alert] ${type.toUpperCase()}: ${msg}`);
         }
 
-        document.getElementById('signupForm').addEventListener('submit', async (e) => {
+        async function handleSignup(e) {
             e.preventDefault();
+            console.log('[Signup] Form submitted, role:', activeRole);
             
             const btn = document.getElementById('submitBtn');
+            if (!btn) {
+                console.error('[Signup] Submit button not found');
+                showAlert('Form error - button not found', 'error');
+                return;
+            }
+
             btn.disabled = true;
             btn.innerHTML = '<span class="spinner"></span> Creating account...';
 
@@ -415,12 +431,12 @@
                     await signupAlumni();
                 }
             } catch (err) {
-                console.error('Signup error:', err);
+                console.error('[Signup] Error:', err);
                 showAlert(err.message || 'Signup failed', 'error');
                 btn.disabled = false;
                 btn.innerHTML = 'Create Account';
             }
-        });
+        }
 
         async function signupStudent() {
             const name = document.getElementById('studentName').value.trim();
@@ -430,10 +446,10 @@
             const pass = document.getElementById('studentPass').value;
             const passConfirm = document.getElementById('studentPassConfirm').value;
 
-            console.log('[Signup] Starting student signup:', { email, name });
+            console.log('[Signup] Student signup:', { email, name, dept, batch });
 
             if (!name || !email || !dept || !batch || !pass) {
-                throw new Error('Please fill all fields');
+                throw new Error('Please fill all required fields');
             }
 
             if (pass !== passConfirm) {
@@ -444,7 +460,7 @@
                 throw new Error('Password must be at least 8 characters');
             }
 
-            console.log('[Signup] Validation passed');
+            console.log('[Signup] Validation passed, calling Supabase');
 
             // 1. Sign up with Supabase Auth
             const { data, error } = await window.supabaseClient.auth.signUp({
@@ -461,8 +477,8 @@
             });
 
             if (error) {
-                console.error('[Signup] Auth error:', error);
-                throw new Error(error.message);
+                console.error('[Signup] Supabase error:', error);
+                throw new Error(error.message || 'Failed to create account');
             }
 
             if (!data.user) {
@@ -470,15 +486,15 @@
             }
 
             const userId = data.user.id;
-            console.log('[Signup] User created in auth:', userId);
+            console.log('[Signup] ✅ User created in Supabase:', userId);
 
-            // 2. Call backend to create user record
+            // 2. Call backend to create user record (non-blocking)
             try {
                 const apiUrl = window.location.origin.includes('5000') 
                     ? 'http://127.0.0.1:5000/api/auth-complete-signup' 
                     : '/api/auth-complete-signup';
 
-                console.log('[Signup] Calling backend:', apiUrl);
+                console.log('[Signup] Syncing with backend:', apiUrl);
 
                 const response = await fetch(apiUrl, {
                     method: 'POST',
@@ -492,18 +508,18 @@
                     })
                 });
 
-                const responseData = await response.json();
-                console.log('[Signup] Backend response:', responseData);
-
                 if (!response.ok) {
-                    console.warn('[Signup] Backend warning:', responseData.error);
+                    console.warn('[Signup] Backend warning (continuing anyway):', response.status);
+                } else {
+                    console.log('[Signup] ✅ Backend synced successfully');
                 }
             } catch (err) {
-                console.warn('[Signup] Backend sync warning (continuing anyway):', err);
+                console.warn('[Signup] Backend sync error (continuing anyway):', err.message);
             }
 
+            // 3. Save to localStorage and redirect
             localStorage.setItem('alumnix_user', JSON.stringify({ id: userId, email, name, role: 'student' }));
-            console.log('[Signup] ✅ User saved to localStorage');
+            console.log('[Signup] ✅ Account created successfully');
 
             showAlert('Account created! Redirecting...', 'success');
             setTimeout(() => { window.location.href = 'profile.html'; }, 1500);
@@ -519,10 +535,10 @@
             const pass = document.getElementById('alumniPass').value;
             const passConfirm = document.getElementById('alumniPassConfirm').value;
 
-            console.log('[Signup] Starting alumni signup:', { email, name });
+            console.log('[Signup] Alumni signup:', { email, name, dept, year, company, title });
 
             if (!name || !email || !dept || !year || !company || !title || !pass) {
-                throw new Error('Please fill all fields');
+                throw new Error('Please fill all required fields');
             }
 
             if (pass !== passConfirm) {
@@ -533,7 +549,7 @@
                 throw new Error('Password must be at least 8 characters');
             }
 
-            console.log('[Signup] Validation passed');
+            console.log('[Signup] Validation passed, calling Supabase');
 
             // 1. Sign up with Supabase Auth
             const { data, error } = await window.supabaseClient.auth.signUp({
@@ -552,8 +568,8 @@
             });
 
             if (error) {
-                console.error('[Signup] Auth error:', error);
-                throw new Error(error.message);
+                console.error('[Signup] Supabase error:', error);
+                throw new Error(error.message || 'Failed to create account');
             }
 
             if (!data.user) {
@@ -561,15 +577,15 @@
             }
 
             const userId = data.user.id;
-            console.log('[Signup] User created in auth:', userId);
+            console.log('[Signup] ✅ User created in Supabase:', userId);
 
-            // 2. Call backend to create user record
+            // 2. Call backend to create user record (non-blocking)
             try {
                 const apiUrl = window.location.origin.includes('5000') 
                     ? 'http://127.0.0.1:5000/api/auth-complete-signup' 
                     : '/api/auth-complete-signup';
 
-                console.log('[Signup] Calling backend:', apiUrl);
+                console.log('[Signup] Syncing with backend:', apiUrl);
 
                 const response = await fetch(apiUrl, {
                     method: 'POST',
@@ -583,21 +599,28 @@
                     })
                 });
 
-                const responseData = await response.json();
-                console.log('[Signup] Backend response:', responseData);
-
                 if (!response.ok) {
-                    console.warn('[Signup] Backend warning:', responseData.error);
+                    console.warn('[Signup] Backend warning (continuing anyway):', response.status);
+                } else {
+                    console.log('[Signup] ✅ Backend synced successfully');
                 }
             } catch (err) {
-                console.warn('[Signup] Backend sync warning (continuing anyway):', err);
+                console.warn('[Signup] Backend sync error (continuing anyway):', err.message);
             }
 
+            // 3. Save to localStorage and redirect
             localStorage.setItem('alumnix_user', JSON.stringify({ id: userId, email, name, role: 'alumni' }));
-            console.log('[Signup] ✅ User saved to localStorage');
+            console.log('[Signup] ✅ Account created successfully');
 
             showAlert('Account created! Redirecting...', 'success');
             setTimeout(() => { window.location.href = 'profile.html'; }, 1500);
+        }
+
+        // Initialize when DOM is ready
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initializeForm);
+        } else {
+            initializeForm();
         }
     </script>
 </body>
