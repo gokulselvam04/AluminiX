@@ -313,6 +313,19 @@
     <script src="js/supabase-client.js"></script>
 
     <script>
+        // Wait for Supabase to be ready
+        async function waitForSupabase(maxAttempts = 10) {
+            for (let i = 0; i < maxAttempts; i++) {
+                if (window.supabaseClient && window.supabaseClient.auth) {
+                    console.log('[Login] ✅ Supabase client ready');
+                    return true;
+                }
+                await new Promise(resolve => setTimeout(resolve, 100));
+            }
+            console.error('[Login] ❌ Supabase client not ready after waiting');
+            return false;
+        }
+
         let selectedRole = 'student';
 
         document.querySelectorAll('.role-btn').forEach(btn => {
@@ -340,6 +353,8 @@
             const password = document.getElementById('password').value;
             const btn = document.getElementById('loginBtn');
 
+            console.log('[Login] Attempting login:', { email, role: selectedRole });
+
             if (!email || !password) {
                 showAlert('Please fill all fields', 'error');
                 return;
@@ -349,18 +364,29 @@
             btn.innerHTML = '<span class="spinner"></span> Logging in...';
 
             try {
+                // Ensure Supabase is ready
+                const ready = await waitForSupabase();
+                if (!ready) {
+                    throw new Error('Supabase not initialized. Please refresh the page.');
+                }
+
+                console.log('[Login] Calling Supabase auth.signInWithPassword');
+
                 const { data, error } = await window.supabaseClient.auth.signInWithPassword({
                     email,
                     password
                 });
 
                 if (error) {
+                    console.error('[Login] Auth error:', error);
                     throw new Error(error.message);
                 }
 
                 if (!data.user) {
-                    throw new Error('Login failed');
+                    throw new Error('Login failed - no user returned');
                 }
+
+                console.log('[Login] ✅ Login successful:', data.user.id);
 
                 localStorage.setItem('alumnix_user', JSON.stringify({
                     id: data.user.id,
@@ -372,7 +398,7 @@
                 setTimeout(() => { window.location.href = 'dashboard.html'; }, 1500);
 
             } catch (err) {
-                console.error('Login error:', err);
+                console.error('[Login] Error:', err);
                 showAlert(err.message || 'Login failed. Check your credentials.', 'error');
                 btn.disabled = false;
                 btn.innerHTML = 'Log In';

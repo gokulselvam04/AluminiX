@@ -3,14 +3,27 @@
  * Singleton instance of Supabase JS client for authentication and Realtime subscriptions.
  */
 
-if (!window.ALUMNIX_CONFIG) {
-  console.error("[SupabaseClient] window.ALUMNIX_CONFIG is missing. Make sure js/config.js is loaded before js/supabase-client.js.");
-}
+function initializeSupabase() {
+  // Check if Supabase library is loaded
+  if (typeof window.supabase === 'undefined') {
+    console.error("[SupabaseClient] Supabase library not loaded. Make sure the CDN script is included.");
+    return false;
+  }
 
-const supabaseUrl = window.ALUMNIX_CONFIG ? window.ALUMNIX_CONFIG.SUPABASE_URL : "";
-const supabaseAnonKey = window.ALUMNIX_CONFIG ? window.ALUMNIX_CONFIG.SUPABASE_ANON_KEY : "";
+  // Check if config exists
+  if (!window.ALUMNIX_CONFIG) {
+    console.error("[SupabaseClient] ALUMNIX_CONFIG not found. Make sure js/config.js is loaded first.");
+    return false;
+  }
 
-if (window.supabase && supabaseUrl && supabaseAnonKey) {
+  const supabaseUrl = window.ALUMNIX_CONFIG.SUPABASE_URL;
+  const supabaseAnonKey = window.ALUMNIX_CONFIG.SUPABASE_ANON_KEY;
+
+  if (!supabaseUrl || !supabaseAnonKey) {
+    console.error("[SupabaseClient] Missing Supabase URL or Anon Key");
+    return false;
+  }
+
   try {
     window.supabaseClient = window.supabase.createClient(supabaseUrl, supabaseAnonKey, {
       auth: {
@@ -19,10 +32,20 @@ if (window.supabase && supabaseUrl && supabaseAnonKey) {
         detectSessionInUrl: true
       }
     });
-    console.log("[SupabaseClient] Production client initialized successfully.");
+    console.log("[SupabaseClient] ✅ Supabase client initialized successfully");
+    return true;
   } catch (err) {
-    console.error("[SupabaseClient] Failed to initialize Supabase client:", err);
+    console.error("[SupabaseClient] ❌ Failed to initialize:", err);
+    return false;
   }
-} else {
-  console.warn("[SupabaseClient] Supabase CDN script or valid configuration keys not found.");
 }
+
+// Initialize immediately if possible
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initializeSupabase);
+} else {
+  initializeSupabase();
+}
+
+// Also expose init function globally
+window.initializeSupabase = initializeSupabase;

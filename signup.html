@@ -355,6 +355,19 @@
     <script src="js/api.js"></script>
 
     <script>
+        // Wait for Supabase to be ready
+        async function waitForSupabase(maxAttempts = 10) {
+            for (let i = 0; i < maxAttempts; i++) {
+                if (window.supabaseClient && window.supabaseClient.auth) {
+                    console.log('[Signup] ✅ Supabase client ready');
+                    return true;
+                }
+                await new Promise(resolve => setTimeout(resolve, 100));
+            }
+            console.error('[Signup] ❌ Supabase client not ready after waiting');
+            return false;
+        }
+
         let activeRole = 'student';
 
         document.querySelectorAll('.role-tab').forEach(tab => {
@@ -390,6 +403,12 @@
             btn.innerHTML = '<span class="spinner"></span> Creating account...';
 
             try {
+                // Ensure Supabase is ready
+                const ready = await waitForSupabase();
+                if (!ready) {
+                    throw new Error('Supabase not initialized. Please refresh the page.');
+                }
+
                 if (activeRole === 'student') {
                     await signupStudent();
                 } else {
@@ -411,6 +430,8 @@
             const pass = document.getElementById('studentPass').value;
             const passConfirm = document.getElementById('studentPassConfirm').value;
 
+            console.log('[Signup] Starting student signup:', { email, name });
+
             if (!name || !email || !dept || !batch || !pass) {
                 throw new Error('Please fill all fields');
             }
@@ -423,47 +444,68 @@
                 throw new Error('Password must be at least 8 characters');
             }
 
+            console.log('[Signup] Validation passed');
+
             // 1. Sign up with Supabase Auth
             const { data, error } = await window.supabaseClient.auth.signUp({
                 email,
                 password: pass,
-                options: { data: { full_name: name, role: 'student' } }
+                options: { 
+                    data: { 
+                        full_name: name, 
+                        role: 'student',
+                        department: dept,
+                        batch: batch
+                    } 
+                }
             });
 
-            if (error) throw new Error(error.message);
-            if (!data.user) throw new Error('Signup failed');
+            if (error) {
+                console.error('[Signup] Auth error:', error);
+                throw new Error(error.message);
+            }
+
+            if (!data.user) {
+                throw new Error('Signup failed - no user returned');
+            }
 
             const userId = data.user.id;
+            console.log('[Signup] User created in auth:', userId);
 
             // 2. Call backend to create user record
             try {
-                const response = await fetch(
-                    window.location.origin.includes('5000') ? 'http://127.0.0.1:5000/api/auth-complete-signup' : '/api/auth-complete-signup',
-                    {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({
-                            user_id: userId,
-                            email,
-                            full_name: name,
-                            role: 'student',
-                            department: dept
-                        })
-                    }
-                );
+                const apiUrl = window.location.origin.includes('5000') 
+                    ? 'http://127.0.0.1:5000/api/auth-complete-signup' 
+                    : '/api/auth-complete-signup';
+
+                console.log('[Signup] Calling backend:', apiUrl);
+
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        user_id: userId,
+                        email,
+                        full_name: name,
+                        role: 'student',
+                        department: dept
+                    })
+                });
+
+                const responseData = await response.json();
+                console.log('[Signup] Backend response:', responseData);
 
                 if (!response.ok) {
-                    const errData = await response.json();
-                    throw new Error(errData.error || 'Backend signup failed');
+                    console.warn('[Signup] Backend warning:', responseData.error);
                 }
             } catch (err) {
-                console.warn('Backend sync warning:', err);
-                // Continue anyway - user is created in auth
+                console.warn('[Signup] Backend sync warning (continuing anyway):', err);
             }
 
             localStorage.setItem('alumnix_user', JSON.stringify({ id: userId, email, name, role: 'student' }));
-            showAlert('Account created! Redirecting...', 'success');
+            console.log('[Signup] ✅ User saved to localStorage');
 
+            showAlert('Account created! Redirecting...', 'success');
             setTimeout(() => { window.location.href = 'profile.html'; }, 1500);
         }
 
@@ -477,6 +519,8 @@
             const pass = document.getElementById('alumniPass').value;
             const passConfirm = document.getElementById('alumniPassConfirm').value;
 
+            console.log('[Signup] Starting alumni signup:', { email, name });
+
             if (!name || !email || !dept || !year || !company || !title || !pass) {
                 throw new Error('Please fill all fields');
             }
@@ -489,46 +533,70 @@
                 throw new Error('Password must be at least 8 characters');
             }
 
+            console.log('[Signup] Validation passed');
+
             // 1. Sign up with Supabase Auth
             const { data, error } = await window.supabaseClient.auth.signUp({
                 email,
                 password: pass,
-                options: { data: { full_name: name, role: 'alumni' } }
+                options: { 
+                    data: { 
+                        full_name: name, 
+                        role: 'alumni',
+                        department: dept,
+                        grad_year: year,
+                        company: company,
+                        job_role: title
+                    } 
+                }
             });
 
-            if (error) throw new Error(error.message);
-            if (!data.user) throw new Error('Signup failed');
+            if (error) {
+                console.error('[Signup] Auth error:', error);
+                throw new Error(error.message);
+            }
+
+            if (!data.user) {
+                throw new Error('Signup failed - no user returned');
+            }
 
             const userId = data.user.id;
+            console.log('[Signup] User created in auth:', userId);
 
             // 2. Call backend to create user record
             try {
-                const response = await fetch(
-                    window.location.origin.includes('5000') ? 'http://127.0.0.1:5000/api/auth-complete-signup' : '/api/auth-complete-signup',
-                    {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({
-                            user_id: userId,
-                            email,
-                            full_name: name,
-                            role: 'alumni',
-                            department: dept
-                        })
-                    }
-                );
+                const apiUrl = window.location.origin.includes('5000') 
+                    ? 'http://127.0.0.1:5000/api/auth-complete-signup' 
+                    : '/api/auth-complete-signup';
+
+                console.log('[Signup] Calling backend:', apiUrl);
+
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        user_id: userId,
+                        email,
+                        full_name: name,
+                        role: 'alumni',
+                        department: dept
+                    })
+                });
+
+                const responseData = await response.json();
+                console.log('[Signup] Backend response:', responseData);
 
                 if (!response.ok) {
-                    const errData = await response.json();
-                    throw new Error(errData.error || 'Backend signup failed');
+                    console.warn('[Signup] Backend warning:', responseData.error);
                 }
             } catch (err) {
-                console.warn('Backend sync warning:', err);
+                console.warn('[Signup] Backend sync warning (continuing anyway):', err);
             }
 
             localStorage.setItem('alumnix_user', JSON.stringify({ id: userId, email, name, role: 'alumni' }));
-            showAlert('Account created! Redirecting...', 'success');
+            console.log('[Signup] ✅ User saved to localStorage');
 
+            showAlert('Account created! Redirecting...', 'success');
             setTimeout(() => { window.location.href = 'profile.html'; }, 1500);
         }
     </script>
