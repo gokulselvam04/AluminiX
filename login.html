@@ -308,17 +308,21 @@
         </div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.0.0/dist/module.js"></script>
+    <!-- Official UMD build for Supabase JS v2 -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="js/config.js"></script>
     <script src="js/supabase-client.js"></script>
 
     <script>
         // Wait for Supabase to be ready
-        async function waitForSupabase(maxAttempts = 10) {
+        async function waitForSupabase(maxAttempts = 15) {
             for (let i = 0; i < maxAttempts; i++) {
                 if (window.supabaseClient && window.supabaseClient.auth) {
                     console.log('[Login] ✅ Supabase client ready');
                     return true;
+                }
+                if (typeof window.initializeSupabase === 'function') {
+                    window.initializeSupabase();
                 }
                 await new Promise(resolve => setTimeout(resolve, 100));
             }
@@ -339,6 +343,7 @@
 
         function showAlert(msg, type = 'error') {
             const alert = document.getElementById('alert');
+            if (!alert) return;
             alert.textContent = msg;
             alert.className = `alert show ${type}`;
             if (type === 'success') {
@@ -382,20 +387,47 @@
                     throw new Error(error.message);
                 }
 
-                if (!data.user) {
+                if (!data || !data.user) {
                     throw new Error('Login failed - no user returned');
                 }
 
                 console.log('[Login] ✅ Login successful:', data.user.id);
 
-                localStorage.setItem('alumnix_user', JSON.stringify({
+                // Fetch user record from public.users if available
+                let fullName = data.user.user_metadata?.full_name || email.split('@')[0];
+                let userRole = data.user.user_metadata?.role || selectedRole;
+                let department = data.user.user_metadata?.department || 'Computer Science & Engineering';
+
+                try {
+                    const { data: dbUser } = await window.supabaseClient
+                        .from('users')
+                        .select('*')
+                        .eq('id', data.user.id)
+                        .maybeSingle();
+
+                    if (dbUser) {
+                        fullName = dbUser.full_name || fullName;
+                        userRole = dbUser.role || userRole;
+                        department = dbUser.department || department;
+                    }
+                } catch (dbErr) {
+                    console.warn('[Login] Error fetching user profile:', dbErr);
+                }
+
+                const sessionObj = {
                     id: data.user.id,
                     email: data.user.email,
-                    role: selectedRole
-                }));
+                    role: userRole,
+                    full_name: fullName,
+                    department: department,
+                    institution: 'Karpagam Institute of Technology'
+                };
+
+                localStorage.setItem('alumnix_user_session', JSON.stringify(sessionObj));
+                localStorage.setItem('alumnix_user', JSON.stringify(sessionObj));
 
                 showAlert('Login successful! Redirecting...', 'success');
-                setTimeout(() => { window.location.href = 'dashboard.html'; }, 1500);
+                setTimeout(() => { window.location.href = 'dashboard.html'; }, 1000);
 
             } catch (err) {
                 console.error('[Login] Error:', err);

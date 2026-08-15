@@ -245,7 +245,7 @@
                 <button class="role-tab" data-role="alumni" type="button">Alumni</button>
             </div>
 
-            <form id="signupForm">
+            <form id="signupForm" novalidate>
                 <!-- Student Form -->
                 <div id="studentSection" class="form-section active">
                     <div class="form-group">
@@ -278,13 +278,13 @@
                         </div>
                         <div class="form-group">
                             <label for="studentPass">Password</label>
-                            <input type="password" id="studentPass" name="studentPass" placeholder="Min 8 characters" required>
+                            <input type="password" id="studentPass" name="studentPass" placeholder="Min 8 characters" required autocomplete="new-password">
                         </div>
                     </div>
 
                     <div class="form-group">
                         <label for="studentPassConfirm">Confirm Password</label>
-                        <input type="password" id="studentPassConfirm" name="studentPassConfirm" placeholder="Confirm password" required>
+                        <input type="password" id="studentPassConfirm" name="studentPassConfirm" placeholder="Confirm password" required autocomplete="new-password">
                     </div>
                 </div>
 
@@ -292,17 +292,17 @@
                 <div id="alumniSection" class="form-section">
                     <div class="form-group">
                         <label for="alumniName">Full Name</label>
-                        <input type="text" id="alumniName" name="alumniName" placeholder="Jane Smith" required>
+                        <input type="text" id="alumniName" name="alumniName" placeholder="Jane Smith" disabled required>
                     </div>
 
                     <div class="form-group">
                         <label for="alumniEmail">Email Address</label>
-                        <input type="email" id="alumniEmail" name="alumniEmail" placeholder="jane@company.com" required>
+                        <input type="email" id="alumniEmail" name="alumniEmail" placeholder="jane@company.com" disabled required>
                     </div>
 
                     <div class="form-group">
                         <label for="alumniDept">Department (During Study)</label>
-                        <select id="alumniDept" name="alumniDept" required>
+                        <select id="alumniDept" name="alumniDept" disabled required>
                             <option value="">Select your department</option>
                             <option value="Computer Science">Computer Science & Engineering</option>
                             <option value="Electronics">Electronics & Communication</option>
@@ -316,27 +316,27 @@
                     <div class="form-row">
                         <div class="form-group">
                             <label for="alumniYear">Graduation Year</label>
-                            <input type="number" id="alumniYear" name="alumniYear" placeholder="2020" min="1990" max="2024" required>
+                            <input type="number" id="alumniYear" name="alumniYear" placeholder="2020" min="1980" max="2026" disabled required>
                         </div>
                         <div class="form-group">
                             <label for="alumniCompany">Company</label>
-                            <input type="text" id="alumniCompany" name="alumniCompany" placeholder="Tech Corp" required>
+                            <input type="text" id="alumniCompany" name="alumniCompany" placeholder="Tech Corp" disabled required>
                         </div>
                     </div>
 
                     <div class="form-group">
                         <label for="alumniTitle">Job Title</label>
-                        <input type="text" id="alumniTitle" name="alumniTitle" placeholder="Senior Engineer" required>
+                        <input type="text" id="alumniTitle" name="alumniTitle" placeholder="Senior Engineer" disabled required>
                     </div>
 
                     <div class="form-row">
                         <div class="form-group">
                             <label for="alumniPass">Password</label>
-                            <input type="password" id="alumniPass" name="alumniPass" placeholder="Min 8 characters" required>
+                            <input type="password" id="alumniPass" name="alumniPass" placeholder="Min 8 characters" disabled required autocomplete="new-password">
                         </div>
                         <div class="form-group">
                             <label for="alumniPassConfirm">Confirm Password</label>
-                            <input type="password" id="alumniPassConfirm" name="alumniPassConfirm" placeholder="Confirm password" required>
+                            <input type="password" id="alumniPassConfirm" name="alumniPassConfirm" placeholder="Confirm password" disabled required autocomplete="new-password">
                         </div>
                     </div>
                 </div>
@@ -352,7 +352,8 @@
         </div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.0.0/dist/module.js"></script>
+    <!-- Official UMD build for Supabase JS v2 -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="js/config.js"></script>
     <script src="js/supabase-client.js"></script>
 
@@ -361,13 +362,59 @@
         
         let activeRole = 'student';
 
-        // Show alert with detailed error info
+        // Show alert with detailed error or success info
         function showAlert(msg, type = 'error') {
             const alert = document.getElementById('alert');
+            if (!alert) return;
             alert.textContent = msg;
             alert.className = `alert show ${type}`;
-            console.error(`[ALERT] ${type}: ${msg}`);
-            window.scrollTo(0, 0);
+            if (type === 'error') {
+                console.error(`[Signup Alert] ${type}:`, msg);
+            } else {
+                console.log(`[Signup Alert] ${type}:`, msg);
+            }
+            alert.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+
+        function hideAlert() {
+            const alert = document.getElementById('alert');
+            if (alert) {
+                alert.className = 'alert';
+                alert.textContent = '';
+            }
+        }
+
+        // Email validation helper
+        function isValidEmail(email) {
+            return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+        }
+
+        // Toggle role and active fields
+        function switchRole(role) {
+            activeRole = role;
+            console.log('[Signup] Switching role to:', activeRole);
+            hideAlert();
+
+            document.querySelectorAll('.role-tab').forEach(t => {
+                t.classList.toggle('active', t.dataset.role === activeRole);
+            });
+
+            const studentSec = document.getElementById('studentSection');
+            const alumniSec = document.getElementById('alumniSection');
+
+            if (activeRole === 'student') {
+                studentSec.classList.add('active');
+                alumniSec.classList.remove('active');
+                // Enable student inputs, disable alumni inputs
+                studentSec.querySelectorAll('input, select').forEach(el => el.removeAttribute('disabled'));
+                alumniSec.querySelectorAll('input, select').forEach(el => el.setAttribute('disabled', 'true'));
+            } else {
+                studentSec.classList.remove('active');
+                alumniSec.classList.add('active');
+                // Enable alumni inputs, disable student inputs
+                alumniSec.querySelectorAll('input, select').forEach(el => el.removeAttribute('disabled'));
+                studentSec.querySelectorAll('input, select').forEach(el => el.setAttribute('disabled', 'true'));
+            }
         }
 
         // Initialize form
@@ -378,30 +425,36 @@
             document.querySelectorAll('.role-tab').forEach(tab => {
                 tab.addEventListener('click', (e) => {
                     e.preventDefault();
-                    console.log('[Signup] Switching role to:', tab.dataset.role);
-                    
-                    document.querySelectorAll('.role-tab').forEach(t => t.classList.remove('active'));
-                    document.querySelectorAll('.form-section').forEach(s => s.classList.remove('active'));
-                    
-                    tab.classList.add('active');
-                    activeRole = tab.dataset.role;
-                    
-                    if (activeRole === 'student') {
-                        document.getElementById('studentSection').classList.add('active');
-                    } else {
-                        document.getElementById('alumniSection').classList.add('active');
-                    }
+                    switchRole(tab.dataset.role);
                 });
             });
+
+            // Initial role state
+            switchRole('student');
 
             // Form submit listener
             const form = document.getElementById('signupForm');
             form.addEventListener('submit', handleSubmit);
-            console.log('[Signup] Form listeners attached');
+            console.log('[Signup] Form listeners attached successfully');
+        }
+
+        // Ensure Supabase client is ready
+        async function getSupabaseClient(maxAttempts = 15) {
+            for (let i = 0; i < maxAttempts; i++) {
+                if (window.supabaseClient && window.supabaseClient.auth) {
+                    return window.supabaseClient;
+                }
+                if (typeof window.initializeSupabase === 'function') {
+                    window.initializeSupabase();
+                }
+                await new Promise(res => setTimeout(res, 100));
+            }
+            return window.supabaseClient;
         }
 
         async function handleSubmit(e) {
             e.preventDefault();
+            hideAlert();
             console.log('[Signup] Form submitted - role:', activeRole);
             
             const btn = document.getElementById('submitBtn');
@@ -409,53 +462,52 @@
             btn.innerHTML = '<span class="spinner"></span> Creating account...';
 
             try {
-                // Check Supabase
-                if (!window.supabaseClient) {
-                    throw new Error('Supabase not initialized - try refreshing the page');
-                }
-
-                if (!window.supabaseClient.auth) {
-                    throw new Error('Supabase auth not available');
+                const client = await getSupabaseClient();
+                if (!client || !client.auth) {
+                    throw new Error('Supabase client failed to initialize. Please check your internet connection or reload.');
                 }
 
                 if (activeRole === 'student') {
-                    await handleStudentSignup();
+                    await handleStudentSignup(client);
                 } else {
-                    await handleAlumniSignup();
+                    await handleAlumniSignup(client);
                 }
             } catch (error) {
-                const errorMsg = error.message || error.toString();
+                const errorMsg = error.message || error.toString() || 'An unexpected error occurred during signup.';
                 console.error('[SIGNUP_ERROR]', error);
-                showAlert(`Error: ${errorMsg}`);
+                showAlert(errorMsg, 'error');
                 btn.disabled = false;
                 btn.innerHTML = 'Create Account';
             }
         }
 
-        async function handleStudentSignup() {
+        async function handleStudentSignup(client) {
             const name = document.getElementById('studentName').value.trim();
             const email = document.getElementById('studentEmail').value.trim();
             const dept = document.getElementById('studentDept').value;
-            const batch = document.getElementById('studentBatch').value;
+            const batch = document.getElementById('studentBatch').value.trim();
             const pass = document.getElementById('studentPass').value;
             const passConfirm = document.getElementById('studentPassConfirm').value;
 
-            console.log('[Student Signup] Values:', { name, email, dept, batch, passLength: pass.length });
+            console.log('[Student Signup] Submitting with:', { name, email, dept, batch, passLength: pass ? pass.length : 0 });
 
-            // Validation
-            if (!name) throw new Error('Name is required');
-            if (!email) throw new Error('Email is required');
-            if (!dept) throw new Error('Department is required');
+            // Client Validation
+            if (!name) throw new Error('Full Name is required');
+            if (!email) throw new Error('Email Address is required');
+            if (!isValidEmail(email)) throw new Error('Please enter a valid email address');
+            if (!dept) throw new Error('Please select your department');
             if (!batch) throw new Error('Batch year is required');
+            const batchNum = parseInt(batch, 10);
+            if (isNaN(batchNum) || batchNum < 2000 || batchNum > 2035) {
+                throw new Error('Please enter a valid batch year (e.g. 2024)');
+            }
             if (!pass) throw new Error('Password is required');
-            if (pass.length < 8) throw new Error('Password must be at least 8 characters');
+            if (pass.length < 8) throw new Error('Password must be at least 8 characters long');
             if (pass !== passConfirm) throw new Error('Passwords do not match');
 
-            console.log('[Student Signup] Validation passed');
+            console.log('[Student Signup] Client validation passed. Calling Supabase auth.signUp...');
 
-            // Call Supabase
-            console.log('[Student Signup] Calling Supabase.auth.signUp...');
-            const { data, error } = await window.supabaseClient.auth.signUp({
+            const { data, error } = await client.auth.signUp({
                 email,
                 password: pass,
                 options: {
@@ -469,59 +521,83 @@
             });
 
             if (error) {
-                console.error('[Student Signup] Supabase Error:', error);
-                throw new Error(`Supabase error: ${error.message}`);
+                console.error('[Student Signup] Supabase Auth Error:', error);
+                if (error.message.toLowerCase().includes('already registered')) {
+                    throw new Error('An account with this email already exists. Please log in.');
+                }
+                throw new Error(error.message);
             }
 
             if (!data || !data.user) {
-                console.error('[Student Signup] No user in response:', data);
-                throw new Error('Account creation failed - no user returned');
+                console.error('[Student Signup] No user returned in response:', data);
+                throw new Error('Account creation failed: no user data returned from authentication service.');
             }
 
-            console.log('[Student Signup] ✅ Success! User ID:', data.user.id);
+            const userId = data.user.id;
+            console.log('[Student Signup] ✅ Auth signup successful! User ID:', userId);
 
-            // Save and redirect
-            localStorage.setItem('alumnix_user', JSON.stringify({
-                id: data.user.id,
+            // Synchronize with public.users table
+            const userRow = {
+                id: userId,
                 email: email,
-                name: name,
-                role: 'student'
-            }));
+                role: 'student',
+                full_name: name,
+                department: dept,
+                institution: 'Karpagam Institute of Technology'
+            };
 
-            showAlert('Account created successfully! Redirecting...', 'success');
+            try {
+                const { error: dbError } = await client.from('users').upsert(userRow);
+                if (dbError) {
+                    console.warn('[Student Signup] public.users upsert notice:', dbError);
+                } else {
+                    console.log('[Student Signup] ✅ public.users synchronized');
+                }
+            } catch (dbErr) {
+                console.warn('[Student Signup] public.users sync error:', dbErr);
+            }
+
+            // Save session to localStorage for application-wide compatibility
+            localStorage.setItem('alumnix_user_session', JSON.stringify(userRow));
+            localStorage.setItem('alumnix_user', JSON.stringify(userRow));
+
+            showAlert('Account created successfully! Redirecting to your dashboard...', 'success');
             setTimeout(() => {
-                window.location.href = 'profile.html';
-            }, 1500);
+                window.location.href = 'dashboard.html';
+            }, 1200);
         }
 
-        async function handleAlumniSignup() {
+        async function handleAlumniSignup(client) {
             const name = document.getElementById('alumniName').value.trim();
             const email = document.getElementById('alumniEmail').value.trim();
             const dept = document.getElementById('alumniDept').value;
-            const year = document.getElementById('alumniYear').value;
+            const year = document.getElementById('alumniYear').value.trim();
             const company = document.getElementById('alumniCompany').value.trim();
             const title = document.getElementById('alumniTitle').value.trim();
             const pass = document.getElementById('alumniPass').value;
             const passConfirm = document.getElementById('alumniPassConfirm').value;
 
-            console.log('[Alumni Signup] Values:', { name, email, dept, year, company, title, passLength: pass.length });
+            console.log('[Alumni Signup] Submitting with:', { name, email, dept, year, company, title, passLength: pass ? pass.length : 0 });
 
-            // Validation
-            if (!name) throw new Error('Name is required');
-            if (!email) throw new Error('Email is required');
-            if (!dept) throw new Error('Department is required');
+            // Client Validation
+            if (!name) throw new Error('Full Name is required');
+            if (!email) throw new Error('Email Address is required');
+            if (!isValidEmail(email)) throw new Error('Please enter a valid email address');
+            if (!dept) throw new Error('Please select your department');
             if (!year) throw new Error('Graduation year is required');
-            if (!company) throw new Error('Company is required');
+            const yearNum = parseInt(year, 10);
+            if (isNaN(yearNum) || yearNum < 1980 || yearNum > 2026) {
+                throw new Error('Please enter a valid graduation year (e.g. 2020)');
+            }
+            if (!company) throw new Error('Company name is required');
             if (!title) throw new Error('Job title is required');
             if (!pass) throw new Error('Password is required');
-            if (pass.length < 8) throw new Error('Password must be at least 8 characters');
+            if (pass.length < 8) throw new Error('Password must be at least 8 characters long');
             if (pass !== passConfirm) throw new Error('Passwords do not match');
 
-            console.log('[Alumni Signup] Validation passed');
+            console.log('[Alumni Signup] Client validation passed. Calling Supabase auth.signUp...');
 
-            // Call Supabase
-            console.log('[Alumni Signup] Calling Supabase.auth.signUp...');
-            const { data, error } = await window.supabaseClient.auth.signUp({
+            const { data, error } = await client.auth.signUp({
                 email,
                 password: pass,
                 options: {
@@ -537,29 +613,73 @@
             });
 
             if (error) {
-                console.error('[Alumni Signup] Supabase Error:', error);
-                throw new Error(`Supabase error: ${error.message}`);
+                console.error('[Alumni Signup] Supabase Auth Error:', error);
+                if (error.message.toLowerCase().includes('already registered')) {
+                    throw new Error('An account with this email already exists. Please log in.');
+                }
+                throw new Error(error.message);
             }
 
             if (!data || !data.user) {
-                console.error('[Alumni Signup] No user in response:', data);
-                throw new Error('Account creation failed - no user returned');
+                console.error('[Alumni Signup] No user returned in response:', data);
+                throw new Error('Account creation failed: no user data returned from authentication service.');
             }
 
-            console.log('[Alumni Signup] ✅ Success! User ID:', data.user.id);
+            const userId = data.user.id;
+            console.log('[Alumni Signup] ✅ Auth signup successful! User ID:', userId);
 
-            // Save and redirect
-            localStorage.setItem('alumnix_user', JSON.stringify({
-                id: data.user.id,
+            // Synchronize with public.users table
+            const userRow = {
+                id: userId,
                 email: email,
-                name: name,
-                role: 'alumni'
-            }));
+                role: 'alumni',
+                full_name: name,
+                department: dept,
+                institution: 'Karpagam Institute of Technology'
+            };
 
-            showAlert('Account created successfully! Redirecting...', 'success');
+            try {
+                const { error: dbError } = await client.from('users').upsert(userRow);
+                if (dbError) {
+                    console.warn('[Alumni Signup] public.users upsert notice:', dbError);
+                } else {
+                    console.log('[Alumni Signup] ✅ public.users synchronized');
+                }
+            } catch (dbErr) {
+                console.warn('[Alumni Signup] public.users sync error:', dbErr);
+            }
+
+            // Synchronize with public.alumni_profiles table
+            const profileRow = {
+                user_id: userId,
+                batch_year: yearNum,
+                department: dept,
+                company: company,
+                job_role: title,
+                industry: 'Software Development & IT',
+                bio: `KIT Alumnus (${year}). ${title} at ${company}.`,
+                mentor_available: true
+            };
+
+            try {
+                const { error: profError } = await client.from('alumni_profiles').upsert(profileRow);
+                if (profError) {
+                    console.warn('[Alumni Signup] public.alumni_profiles upsert notice:', profError);
+                } else {
+                    console.log('[Alumni Signup] ✅ public.alumni_profiles synchronized');
+                }
+            } catch (profErr) {
+                console.warn('[Alumni Signup] public.alumni_profiles sync error:', profErr);
+            }
+
+            // Save session to localStorage for application-wide compatibility
+            localStorage.setItem('alumnix_user_session', JSON.stringify({ ...userRow, company, job_role: title }));
+            localStorage.setItem('alumnix_user', JSON.stringify({ ...userRow, company, job_role: title }));
+
+            showAlert('Alumni account created successfully! Redirecting to your dashboard...', 'success');
             setTimeout(() => {
-                window.location.href = 'profile.html';
-            }, 1500);
+                window.location.href = 'dashboard.html';
+            }, 1200);
         }
 
         // Setup form when DOM is ready
@@ -568,15 +688,6 @@
         } else {
             setupForm();
         }
-
-        // Log config status
-        console.log('[Signup] Config status:', {
-            configExists: !!window.ALUMNIX_CONFIG,
-            supabaseUrl: window.ALUMNIX_CONFIG?.SUPABASE_URL ? '✓' : '✗',
-            anonKey: window.ALUMNIX_CONFIG?.SUPABASE_ANON_KEY ? '✓' : '✗',
-            clientExists: !!window.supabaseClient,
-            authExists: !!window.supabaseClient?.auth
-        });
     </script>
 </body>
 </html>
