@@ -242,10 +242,65 @@
             transition: all 0.3s ease;
         }
 
-        .role-selector button.active {
-            background: white;
-            color: #667eea;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        .google-btn {
+            width: 100%;
+            padding: 12px 16px;
+            background: #ffffff;
+            color: #3c4043;
+            border: 1.5px solid #dadce0;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            box-shadow: 0 1px 3px rgba(60, 64, 67, 0.08);
+            margin-bottom: 18px;
+            font-family: inherit;
+        }
+
+        .google-btn:hover:not(:disabled) {
+            background: #f8f9fa;
+            border-color: #c2c7d0;
+            box-shadow: 0 2px 8px rgba(60, 64, 67, 0.15);
+            transform: translateY(-1px);
+        }
+
+        .google-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .google-icon {
+            width: 18px;
+            height: 18px;
+            flex-shrink: 0;
+        }
+
+        .auth-divider {
+            display: flex;
+            align-items: center;
+            text-align: center;
+            margin: 18px 0;
+            color: #70757a;
+            font-size: 12px;
+        }
+
+        .auth-divider::before,
+        .auth-divider::after {
+            content: '';
+            flex: 1;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .auth-divider span {
+            padding: 0 12px;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
     </style>
 </head>
@@ -266,6 +321,21 @@
 
             <div class="role-info">
                 Logging in as <span id="roleText">Student</span>
+            </div>
+
+            <!-- Google Sign-In Button -->
+            <button type="button" class="google-btn" id="googleBtn">
+                <svg class="google-icon" viewBox="0 0 48 48">
+                    <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/>
+                    <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/>
+                    <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.79l7.97-6.2z"/>
+                    <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/>
+                </svg>
+                <span id="googleBtnLabel">Continue with Google</span>
+            </button>
+
+            <div class="auth-divider">
+                <span>or log in with email</span>
             </div>
 
             <form id="loginForm">
@@ -308,8 +378,9 @@
         </div>
     </div>
 
-    <!-- Official UMD build for Supabase JS v2 -->
+    <!-- Official UMD build for Supabase JS v2 & Google Identity Services -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
     <script src="js/config.js"></script>
     <script src="js/supabase-client.js"></script>
 
@@ -350,6 +421,122 @@
                 setTimeout(() => alert.classList.remove('show'), 3000);
             }
         }
+
+        // Process verified Google user on login
+        async function processGoogleLogin(gUser) {
+            console.log('[Login Google] Processing user:', gUser);
+            const ready = await waitForSupabase();
+            if (!ready) {
+                showAlert('Supabase client not initialized. Please refresh.', 'error');
+                return;
+            }
+
+            try {
+                // Check if user exists in public.users
+                const { data: dbUser, error: checkErr } = await window.supabaseClient
+                    .from('users')
+                    .select('*')
+                    .eq('email', gUser.email)
+                    .maybeSingle();
+
+                if (dbUser) {
+                    console.log('[Login Google] Existing user verified in database:', dbUser);
+                    showAlert(`Welcome back, ${dbUser.full_name}! Logging in...`, 'success');
+
+                    const sessionObj = {
+                        id: dbUser.id,
+                        email: dbUser.email,
+                        role: dbUser.role || selectedRole,
+                        full_name: dbUser.full_name,
+                        department: dbUser.department,
+                        institution: dbUser.institution || 'Karpagam Institute of Technology'
+                    };
+
+                    localStorage.setItem('alumnix_user_session', JSON.stringify(sessionObj));
+                    localStorage.setItem('alumnix_user', JSON.stringify(sessionObj));
+
+                    setTimeout(() => {
+                        window.location.href = 'dashboard.html';
+                    }, 1000);
+                } else {
+                    showAlert('No account found with this Google email. Redirecting to signup...', 'info');
+                    setTimeout(() => {
+                        window.location.href = `signup.html?role=${selectedRole}`;
+                    }, 1200);
+                }
+            } catch (err) {
+                console.error('[Login Google Error]', err);
+                showAlert(err.message || 'Google login failed.', 'error');
+            }
+        }
+
+        // Initiate Google Sign-In via GIS / Supabase OAuth
+        async function initiateGoogleLogin() {
+            console.log('[Login] Initiating Google login');
+            const gBtn = document.getElementById('googleBtn');
+            const btnLabel = document.getElementById('googleBtnLabel');
+            gBtn.disabled = true;
+            btnLabel.textContent = 'Connecting Google...';
+
+            try {
+                const clientId = window.ALUMNIX_CONFIG?.GOOGLE_CLIENT_ID;
+                if (window.google && window.google.accounts && window.google.accounts.oauth2 && clientId) {
+                    const tokenClient = window.google.accounts.oauth2.initTokenClient({
+                        client_id: clientId,
+                        scope: 'email profile openid',
+                        callback: async (tokenResponse) => {
+                            gBtn.disabled = false;
+                            btnLabel.textContent = 'Continue with Google';
+
+                            if (tokenResponse && tokenResponse.access_token) {
+                                try {
+                                    const res = await fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
+                                        headers: { Authorization: `Bearer ${tokenResponse.access_token}` }
+                                    });
+                                    const userInfo = await res.json();
+                                    if (userInfo && userInfo.email) {
+                                        await processGoogleLogin({
+                                            id: userInfo.sub,
+                                            email: userInfo.email,
+                                            name: userInfo.name || userInfo.email.split('@')[0],
+                                            picture: userInfo.picture || ''
+                                        });
+                                    }
+                                } catch (fetchErr) {
+                                    console.error('[Login Google] Error fetching userinfo:', fetchErr);
+                                    showAlert('Failed to retrieve Google profile info.', 'error');
+                                }
+                            } else if (tokenResponse.error) {
+                                showAlert(`Google sign in: ${tokenResponse.error}`, 'error');
+                            }
+                        }
+                    });
+                    tokenClient.requestAccessToken({ prompt: 'select_account' });
+                    return;
+                }
+
+                // Fallback to Supabase OAuth
+                const ready = await waitForSupabase();
+                if (ready) {
+                    const { data, error } = await window.supabaseClient.auth.signInWithOAuth({
+                        provider: 'google',
+                        options: {
+                            redirectTo: `${window.location.origin}/dashboard.html`
+                        }
+                    });
+                    if (error) throw error;
+                } else {
+                    throw new Error('Google Sign-In client is loading. Please try again.');
+                }
+            } catch (err) {
+                console.error('[Login Google Error]', err);
+                showAlert(err.message || 'Google login failed.', 'error');
+                gBtn.disabled = false;
+                btnLabel.textContent = 'Continue with Google';
+            }
+        }
+
+        document.getElementById('googleBtn')?.addEventListener('click', initiateGoogleLogin);
 
         document.getElementById('loginForm').addEventListener('submit', async (e) => {
             e.preventDefault();

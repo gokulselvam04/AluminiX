@@ -212,6 +212,147 @@
             to { transform: rotate(360deg); }
         }
 
+        .google-btn {
+            width: 100%;
+            padding: 12px 16px;
+            background: #ffffff;
+            color: #3c4043;
+            border: 1.5px solid #dadce0;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            box-shadow: 0 1px 3px rgba(60, 64, 67, 0.08);
+            margin-bottom: 20px;
+            font-family: inherit;
+        }
+
+        .google-btn:hover:not(:disabled) {
+            background: #f8f9fa;
+            border-color: #c2c7d0;
+            box-shadow: 0 2px 8px rgba(60, 64, 67, 0.15);
+            transform: translateY(-1px);
+        }
+
+        .google-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .google-icon {
+            width: 18px;
+            height: 18px;
+            flex-shrink: 0;
+        }
+
+        .auth-divider {
+            display: flex;
+            align-items: center;
+            text-align: center;
+            margin: 20px 0;
+            color: #70757a;
+            font-size: 12px;
+        }
+
+        .auth-divider::before,
+        .auth-divider::after {
+            content: '';
+            flex: 1;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .auth-divider span {
+            padding: 0 12px;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .google-connected-card {
+            background: #f0f7ff;
+            border: 1.5px solid #cce4ff;
+            border-radius: 10px;
+            padding: 12px 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 20px;
+            animation: slideIn 0.3s ease;
+        }
+
+        .google-avatar {
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            border: 2px solid #fff;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+        }
+
+        .google-user-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .google-user-name {
+            font-size: 14px;
+            font-weight: 600;
+            color: #1a73e8;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .google-user-email {
+            font-size: 12px;
+            color: #5f6368;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .google-connected-tag {
+            display: inline-block;
+            font-size: 11px;
+            color: #137333;
+            font-weight: 600;
+            margin-top: 2px;
+        }
+
+        .google-disconnect-btn {
+            background: none;
+            border: none;
+            color: #70757a;
+            font-size: 16px;
+            cursor: pointer;
+            padding: 4px 8px;
+            border-radius: 4px;
+            transition: all 0.2s;
+        }
+
+        .google-disconnect-btn:hover {
+            color: #d93025;
+            background: rgba(217, 48, 37, 0.08);
+        }
+
+        .google-auth-notice {
+            background: #e6f4ea;
+            border: 1px solid #ceead6;
+            color: #137333;
+            padding: 10px 14px;
+            border-radius: 8px;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 15px;
+            font-weight: 500;
+        }
+
         .footer-link {
             text-align: center;
             margin-top: 20px;
@@ -245,6 +386,32 @@
                 <button class="role-tab" data-role="alumni" type="button">Alumni</button>
             </div>
 
+            <!-- Google Sign-In Button -->
+            <button type="button" class="google-btn" id="googleBtn">
+                <svg class="google-icon" viewBox="0 0 48 48">
+                    <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/>
+                    <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/>
+                    <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.79l7.97-6.2z"/>
+                    <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/>
+                </svg>
+                <span id="googleBtnLabel">Continue with Google</span>
+            </button>
+
+            <!-- Google Account Connected Card -->
+            <div id="googleConnectedCard" class="google-connected-card" style="display: none;">
+                <img id="googleUserAvatar" src="" class="google-avatar" alt="Google Profile">
+                <div class="google-user-info">
+                    <div id="googleUserName" class="google-user-name"></div>
+                    <div id="googleUserEmail" class="google-user-email"></div>
+                    <div class="google-connected-tag">✓ Google Account Connected</div>
+                </div>
+                <button type="button" id="googleDisconnectBtn" class="google-disconnect-btn" title="Use a different account">✕</button>
+            </div>
+
+            <div class="auth-divider" id="authDivider">
+                <span>or register with details</span>
+            </div>
+
             <form id="signupForm" novalidate>
                 <!-- Student Form -->
                 <div id="studentSection" class="form-section active">
@@ -271,20 +438,26 @@
                         </select>
                     </div>
 
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="studentBatch">Batch Year</label>
-                            <input type="number" id="studentBatch" name="studentBatch" placeholder="2024" min="2020" max="2030" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="studentPass">Password</label>
-                            <input type="password" id="studentPass" name="studentPass" placeholder="Min 8 characters" required autocomplete="new-password">
+                    <div class="form-group">
+                        <label for="studentBatch">Batch Year</label>
+                        <input type="number" id="studentBatch" name="studentBatch" placeholder="2024" min="2020" max="2030" required>
+                    </div>
+
+                    <div id="studentPassContainer">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="studentPass">Password</label>
+                                <input type="password" id="studentPass" name="studentPass" placeholder="Min 8 characters" autocomplete="new-password">
+                            </div>
+                            <div class="form-group">
+                                <label for="studentPassConfirm">Confirm Password</label>
+                                <input type="password" id="studentPassConfirm" name="studentPassConfirm" placeholder="Confirm password" autocomplete="new-password">
+                            </div>
                         </div>
                     </div>
 
-                    <div class="form-group">
-                        <label for="studentPassConfirm">Confirm Password</label>
-                        <input type="password" id="studentPassConfirm" name="studentPassConfirm" placeholder="Confirm password" required autocomplete="new-password">
+                    <div id="studentGoogleNotice" class="google-auth-notice" style="display: none;">
+                        <span>🔒</span> Authenticated securely via Google. Password not required.
                     </div>
                 </div>
 
@@ -329,15 +502,21 @@
                         <input type="text" id="alumniTitle" name="alumniTitle" placeholder="Senior Engineer" disabled required>
                     </div>
 
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="alumniPass">Password</label>
-                            <input type="password" id="alumniPass" name="alumniPass" placeholder="Min 8 characters" disabled required autocomplete="new-password">
+                    <div id="alumniPassContainer">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="alumniPass">Password</label>
+                                <input type="password" id="alumniPass" name="alumniPass" placeholder="Min 8 characters" disabled autocomplete="new-password">
+                            </div>
+                            <div class="form-group">
+                                <label for="alumniPassConfirm">Confirm Password</label>
+                                <input type="password" id="alumniPassConfirm" name="alumniPassConfirm" placeholder="Confirm password" disabled autocomplete="new-password">
+                            </div>
                         </div>
-                        <div class="form-group">
-                            <label for="alumniPassConfirm">Confirm Password</label>
-                            <input type="password" id="alumniPassConfirm" name="alumniPassConfirm" placeholder="Confirm password" disabled required autocomplete="new-password">
-                        </div>
+                    </div>
+
+                    <div id="alumniGoogleNotice" class="google-auth-notice" style="display: none;">
+                        <span>🔒</span> Authenticated securely via Google. Password not required.
                     </div>
                 </div>
 
@@ -352,8 +531,9 @@
         </div>
     </div>
 
-    <!-- Official UMD build for Supabase JS v2 -->
+    <!-- Official UMD build for Supabase JS v2 & Google Identity Services -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
     <script src="js/config.js"></script>
     <script src="js/supabase-client.js"></script>
 
@@ -361,6 +541,7 @@
         console.log('[Signup] Page loaded');
         
         let activeRole = 'student';
+        let googleUserData = null;
 
         // Show alert with detailed error or success info
         function showAlert(msg, type = 'error') {
@@ -405,15 +586,298 @@
             if (activeRole === 'student') {
                 studentSec.classList.add('active');
                 alumniSec.classList.remove('active');
-                // Enable student inputs, disable alumni inputs
                 studentSec.querySelectorAll('input, select').forEach(el => el.removeAttribute('disabled'));
                 alumniSec.querySelectorAll('input, select').forEach(el => el.setAttribute('disabled', 'true'));
             } else {
                 studentSec.classList.remove('active');
                 alumniSec.classList.add('active');
-                // Enable alumni inputs, disable student inputs
                 alumniSec.querySelectorAll('input, select').forEach(el => el.removeAttribute('disabled'));
                 studentSec.querySelectorAll('input, select').forEach(el => el.setAttribute('disabled', 'true'));
+            }
+
+            if (googleUserData) {
+                applyGoogleUserToForm(googleUserData);
+            }
+        }
+
+        // Set Google User details into form
+        function applyGoogleUserToForm(gUser) {
+            googleUserData = gUser;
+
+            // Show connected card
+            const card = document.getElementById('googleConnectedCard');
+            const avatar = document.getElementById('googleUserAvatar');
+            const nameEl = document.getElementById('googleUserName');
+            const emailEl = document.getElementById('googleUserEmail');
+            const gBtn = document.getElementById('googleBtn');
+            const divider = document.getElementById('authDivider');
+
+            if (card) {
+                avatar.src = gUser.picture || `https://ui-avatars.com/api/?name=${encodeURIComponent(gUser.name)}&background=667eea&color=fff`;
+                nameEl.textContent = gUser.name;
+                emailEl.textContent = gUser.email;
+                card.style.display = 'flex';
+            }
+            if (gBtn) gBtn.style.display = 'none';
+            if (divider) divider.style.display = 'none';
+
+            // Populate form fields
+            const studentName = document.getElementById('studentName');
+            const studentEmail = document.getElementById('studentEmail');
+            const alumniName = document.getElementById('alumniName');
+            const alumniEmail = document.getElementById('alumniEmail');
+
+            if (studentName) studentName.value = gUser.name || '';
+            if (studentEmail) {
+                studentEmail.value = gUser.email || '';
+                studentEmail.readOnly = true;
+            }
+
+            if (alumniName) alumniName.value = gUser.name || '';
+            if (alumniEmail) {
+                alumniEmail.value = gUser.email || '';
+                alumniEmail.readOnly = true;
+            }
+
+            // Hide password sections & show Google notice
+            const studentPass = document.getElementById('studentPassContainer');
+            const studentNotice = document.getElementById('studentGoogleNotice');
+            const alumniPass = document.getElementById('alumniPassContainer');
+            const alumniNotice = document.getElementById('alumniGoogleNotice');
+
+            if (studentPass) studentPass.style.display = 'none';
+            if (studentNotice) studentNotice.style.display = 'flex';
+            if (alumniPass) alumniPass.style.display = 'none';
+            if (alumniNotice) alumniNotice.style.display = 'flex';
+
+            const submitBtn = document.getElementById('submitBtn');
+            if (submitBtn) submitBtn.textContent = 'Complete Registration →';
+
+            showAlert(`Google account verified (${gUser.email})! Please complete the remaining ${activeRole === 'student' ? 'Student' : 'Alumni'} details below.`, 'success');
+        }
+
+        // Disconnect Google Account
+        function disconnectGoogle() {
+            googleUserData = null;
+            const card = document.getElementById('googleConnectedCard');
+            const gBtn = document.getElementById('googleBtn');
+            const divider = document.getElementById('authDivider');
+
+            if (card) card.style.display = 'none';
+            if (gBtn) gBtn.style.display = 'flex';
+            if (divider) divider.style.display = 'flex';
+
+            const studentEmail = document.getElementById('studentEmail');
+            const alumniEmail = document.getElementById('alumniEmail');
+            if (studentEmail) studentEmail.readOnly = false;
+            if (alumniEmail) alumniEmail.readOnly = false;
+
+            const studentPass = document.getElementById('studentPassContainer');
+            const studentNotice = document.getElementById('studentGoogleNotice');
+            const alumniPass = document.getElementById('alumniPassContainer');
+            const alumniNotice = document.getElementById('alumniGoogleNotice');
+
+            if (studentPass) studentPass.style.display = 'block';
+            if (studentNotice) studentNotice.style.display = 'none';
+            if (alumniPass) alumniPass.style.display = 'block';
+            if (alumniNotice) alumniNotice.style.display = 'none';
+
+            const submitBtn = document.getElementById('submitBtn');
+            if (submitBtn) submitBtn.textContent = 'Create Account';
+
+            hideAlert();
+        }
+
+        // Decode JWT ID Token from Google Identity Services
+        function decodeJwtPayload(token) {
+            try {
+                const base64Url = token.split('.')[1];
+                const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+                const jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
+                    return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+                }).join(''));
+                return JSON.parse(jsonPayload);
+            } catch (e) {
+                console.error('[Google Auth] Failed to decode JWT:', e);
+                return null;
+            }
+        }
+
+        // Handle Google Identity Services Credential Response
+        async function handleGoogleCredentialResponse(response) {
+            console.log('[Google Auth] Credential response received');
+            if (!response || !response.credential) {
+                showAlert('Google Sign-In was cancelled or failed.', 'error');
+                return;
+            }
+
+            const payload = decodeJwtPayload(response.credential);
+            if (!payload || !payload.email) {
+                showAlert('Failed to read Google profile data. Please try again.', 'error');
+                return;
+            }
+
+            const gUser = {
+                id: payload.sub,
+                email: payload.email,
+                name: payload.name || payload.email.split('@')[0],
+                picture: payload.picture || ''
+            };
+
+            await processGoogleUser(gUser, response.credential);
+        }
+
+        // Process verified Google user: check if existing user, or load into form
+        async function processGoogleUser(gUser, idToken = null) {
+            const client = await getSupabaseClient();
+            if (!client) {
+                showAlert('Authentication service not ready. Please refresh.', 'error');
+                return;
+            }
+
+            // Check if user already exists in public.users
+            try {
+                const { data: existingUser, error: checkErr } = await client
+                    .from('users')
+                    .select('*')
+                    .eq('email', gUser.email)
+                    .maybeSingle();
+
+                if (existingUser) {
+                    console.log('[Google Auth] Existing user found in database:', existingUser);
+                    showAlert(`Welcome back, ${existingUser.full_name}! Logging in...`, 'success');
+
+                    const sessionObj = {
+                        id: existingUser.id,
+                        email: existingUser.email,
+                        role: existingUser.role,
+                        full_name: existingUser.full_name,
+                        department: existingUser.department,
+                        institution: existingUser.institution || 'Karpagam Institute of Technology'
+                    };
+
+                    localStorage.setItem('alumnix_user_session', JSON.stringify(sessionObj));
+                    localStorage.setItem('alumnix_user', JSON.stringify(sessionObj));
+
+                    setTimeout(() => {
+                        window.location.href = 'dashboard.html';
+                    }, 1000);
+                    return;
+                }
+            } catch (e) {
+                console.warn('[Google Auth] User lookup notice:', e);
+            }
+
+            // User is new: apply details to form
+            applyGoogleUserToForm(gUser);
+        }
+
+        // Initiate Google Sign-In via Google Identity Services or Supabase OAuth
+        async function initiateGoogleSignIn() {
+            hideAlert();
+            console.log('[Google Auth] Initiating Google Sign-In');
+            const gBtn = document.getElementById('googleBtn');
+            const btnLabel = document.getElementById('googleBtnLabel');
+            gBtn.disabled = true;
+            btnLabel.textContent = 'Connecting Google...';
+
+            try {
+                // 1. Try Google Identity Services OAuth token client
+                const clientId = window.ALUMNIX_CONFIG?.GOOGLE_CLIENT_ID;
+                if (window.google && window.google.accounts && window.google.accounts.oauth2 && clientId) {
+                    const tokenClient = window.google.accounts.oauth2.initTokenClient({
+                        client_id: clientId,
+                        scope: 'email profile openid',
+                        callback: async (tokenResponse) => {
+                            gBtn.disabled = false;
+                            btnLabel.textContent = 'Continue with Google';
+
+                            if (tokenResponse && tokenResponse.access_token) {
+                                try {
+                                    const res = await fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
+                                        headers: { Authorization: `Bearer ${tokenResponse.access_token}` }
+                                    });
+                                    const userInfo = await res.json();
+                                    if (userInfo && userInfo.email) {
+                                        await processGoogleUser({
+                                            id: userInfo.sub,
+                                            email: userInfo.email,
+                                            name: userInfo.name || userInfo.email.split('@')[0],
+                                            picture: userInfo.picture || ''
+                                        });
+                                    }
+                                } catch (fetchErr) {
+                                    console.error('[Google Auth] Error fetching userinfo:', fetchErr);
+                                    showAlert('Failed to retrieve Google profile info.', 'error');
+                                }
+                            } else if (tokenResponse.error) {
+                                console.error('[Google Auth] Token error:', tokenResponse.error);
+                                showAlert(`Google sign in: ${tokenResponse.error}`, 'error');
+                            }
+                        }
+                    });
+                    tokenClient.requestAccessToken({ prompt: 'select_account' });
+                    return;
+                }
+
+                // 2. Fallback to Supabase OAuth
+                const client = await getSupabaseClient();
+                if (client && client.auth) {
+                    const { data, error } = await client.auth.signInWithOAuth({
+                        provider: 'google',
+                        options: {
+                            redirectTo: `${window.location.origin}${window.location.pathname}?role=${activeRole}`
+                        }
+                    });
+                    if (error) throw error;
+                } else {
+                    throw new Error('Google Sign-In client is loading. Please try again in a few seconds.');
+                }
+            } catch (err) {
+                console.error('[Google Auth Error]', err);
+                showAlert(err.message || 'Google sign in failed. Please use email registration.', 'error');
+                gBtn.disabled = false;
+                btnLabel.textContent = 'Continue with Google';
+            }
+        }
+
+        // Initialize Google Identity Services SDK
+        function initGoogleSDK() {
+            const clientId = window.ALUMNIX_CONFIG?.GOOGLE_CLIENT_ID;
+            if (window.google && window.google.accounts && window.google.accounts.id && clientId) {
+                window.google.accounts.id.initialize({
+                    client_id: clientId,
+                    callback: handleGoogleCredentialResponse,
+                    auto_select: false,
+                    cancel_on_tap_outside: true
+                });
+                console.log('[Google Auth] GIS SDK initialized');
+            }
+        }
+
+        // Check for URL parameters or OAuth redirect callback
+        async function checkOAuthCallback() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const roleParam = urlParams.get('role');
+            if (roleParam && (roleParam === 'student' || roleParam === 'alumni')) {
+                switchRole(roleParam);
+            }
+
+            // Check if Supabase session already exists from OAuth redirect
+            const client = await getSupabaseClient();
+            if (client && client.auth) {
+                const { data: { session } } = await client.auth.getSession();
+                if (session && session.user) {
+                    const u = session.user;
+                    console.log('[Signup] Active Supabase OAuth session found:', u);
+                    const gUser = {
+                        id: u.id,
+                        email: u.email,
+                        name: u.user_metadata?.full_name || u.email.split('@')[0],
+                        picture: u.user_metadata?.avatar_url || ''
+                    };
+                    await processGoogleUser(gUser);
+                }
             }
         }
 
@@ -429,12 +893,21 @@
                 });
             });
 
+            // Google Sign-In Button listener
+            document.getElementById('googleBtn')?.addEventListener('click', initiateGoogleSignIn);
+            document.getElementById('googleDisconnectBtn')?.addEventListener('click', disconnectGoogle);
+
             // Initial role state
             switchRole('student');
 
             // Form submit listener
             const form = document.getElementById('signupForm');
             form.addEventListener('submit', handleSubmit);
+
+            // Initialize Google SDK & check OAuth
+            setTimeout(initGoogleSDK, 300);
+            checkOAuthCallback();
+
             console.log('[Signup] Form listeners attached successfully');
         }
 
@@ -455,7 +928,7 @@
         async function handleSubmit(e) {
             e.preventDefault();
             hideAlert();
-            console.log('[Signup] Form submitted - role:', activeRole);
+            console.log('[Signup] Form submitted - role:', activeRole, 'Google connected:', !!googleUserData);
             
             const btn = document.getElementById('submitBtn');
             btn.disabled = true;
@@ -477,7 +950,7 @@
                 console.error('[SIGNUP_ERROR]', error);
                 showAlert(errorMsg, 'error');
                 btn.disabled = false;
-                btn.innerHTML = 'Create Account';
+                btn.innerHTML = googleUserData ? 'Complete Registration →' : 'Create Account';
             }
         }
 
@@ -489,7 +962,7 @@
             const pass = document.getElementById('studentPass').value;
             const passConfirm = document.getElementById('studentPassConfirm').value;
 
-            console.log('[Student Signup] Submitting with:', { name, email, dept, batch, passLength: pass ? pass.length : 0 });
+            console.log('[Student Signup] Submitting with:', { name, email, dept, batch, isGoogle: !!googleUserData });
 
             // Client Validation
             if (!name) throw new Error('Full Name is required');
@@ -501,40 +974,49 @@
             if (isNaN(batchNum) || batchNum < 2000 || batchNum > 2035) {
                 throw new Error('Please enter a valid batch year (e.g. 2024)');
             }
-            if (!pass) throw new Error('Password is required');
-            if (pass.length < 8) throw new Error('Password must be at least 8 characters long');
-            if (pass !== passConfirm) throw new Error('Passwords do not match');
 
-            console.log('[Student Signup] Client validation passed. Calling Supabase auth.signUp...');
+            let userId = null;
 
-            const { data, error } = await client.auth.signUp({
-                email,
-                password: pass,
-                options: {
-                    data: {
-                        full_name: name,
-                        role: 'student',
-                        department: dept,
-                        batch: batch
+            if (!googleUserData) {
+                // Email & Password flow
+                if (!pass) throw new Error('Password is required');
+                if (pass.length < 8) throw new Error('Password must be at least 8 characters long');
+                if (pass !== passConfirm) throw new Error('Passwords do not match');
+
+                console.log('[Student Signup] Calling Supabase auth.signUp...');
+                const { data, error } = await client.auth.signUp({
+                    email,
+                    password: pass,
+                    options: {
+                        data: {
+                            full_name: name,
+                            role: 'student',
+                            department: dept,
+                            batch: batch
+                        }
                     }
-                }
-            });
+                });
 
-            if (error) {
-                console.error('[Student Signup] Supabase Auth Error:', error);
-                if (error.message.toLowerCase().includes('already registered')) {
-                    throw new Error('An account with this email already exists. Please log in.');
+                if (error) {
+                    console.error('[Student Signup] Supabase Auth Error:', error);
+                    if (error.message.toLowerCase().includes('already registered')) {
+                        throw new Error('An account with this email already exists. Please log in.');
+                    }
+                    throw new Error(error.message);
                 }
-                throw new Error(error.message);
+
+                if (!data || !data.user) {
+                    throw new Error('Account creation failed: no user data returned.');
+                }
+                userId = data.user.id;
+            } else {
+                // Google Authenticated flow
+                userId = (client.auth.currentUser && client.auth.currentUser.id) || 
+                         googleUserData.id || 
+                         (typeof crypto !== 'undefined' && crypto.randomUUID ? crypto.randomUUID() : 'usr_' + Date.now());
             }
 
-            if (!data || !data.user) {
-                console.error('[Student Signup] No user returned in response:', data);
-                throw new Error('Account creation failed: no user data returned from authentication service.');
-            }
-
-            const userId = data.user.id;
-            console.log('[Student Signup] ✅ Auth signup successful! User ID:', userId);
+            console.log('[Student Signup] ✅ Auth verified! User ID:', userId);
 
             // Synchronize with public.users table
             const userRow = {
@@ -557,11 +1039,11 @@
                 console.warn('[Student Signup] public.users sync error:', dbErr);
             }
 
-            // Save session to localStorage for application-wide compatibility
+            // Save session to localStorage
             localStorage.setItem('alumnix_user_session', JSON.stringify(userRow));
             localStorage.setItem('alumnix_user', JSON.stringify(userRow));
 
-            showAlert('Account created successfully! Redirecting to your dashboard...', 'success');
+            showAlert('Student account created successfully! Redirecting to your dashboard...', 'success');
             setTimeout(() => {
                 window.location.href = 'dashboard.html';
             }, 1200);
@@ -577,7 +1059,7 @@
             const pass = document.getElementById('alumniPass').value;
             const passConfirm = document.getElementById('alumniPassConfirm').value;
 
-            console.log('[Alumni Signup] Submitting with:', { name, email, dept, year, company, title, passLength: pass ? pass.length : 0 });
+            console.log('[Alumni Signup] Submitting with:', { name, email, dept, year, company, title, isGoogle: !!googleUserData });
 
             // Client Validation
             if (!name) throw new Error('Full Name is required');
@@ -591,42 +1073,51 @@
             }
             if (!company) throw new Error('Company name is required');
             if (!title) throw new Error('Job title is required');
-            if (!pass) throw new Error('Password is required');
-            if (pass.length < 8) throw new Error('Password must be at least 8 characters long');
-            if (pass !== passConfirm) throw new Error('Passwords do not match');
 
-            console.log('[Alumni Signup] Client validation passed. Calling Supabase auth.signUp...');
+            let userId = null;
 
-            const { data, error } = await client.auth.signUp({
-                email,
-                password: pass,
-                options: {
-                    data: {
-                        full_name: name,
-                        role: 'alumni',
-                        department: dept,
-                        grad_year: year,
-                        company: company,
-                        job_role: title
+            if (!googleUserData) {
+                // Email & Password flow
+                if (!pass) throw new Error('Password is required');
+                if (pass.length < 8) throw new Error('Password must be at least 8 characters long');
+                if (pass !== passConfirm) throw new Error('Passwords do not match');
+
+                console.log('[Alumni Signup] Calling Supabase auth.signUp...');
+                const { data, error } = await client.auth.signUp({
+                    email,
+                    password: pass,
+                    options: {
+                        data: {
+                            full_name: name,
+                            role: 'alumni',
+                            department: dept,
+                            grad_year: year,
+                            company: company,
+                            job_role: title
+                        }
                     }
-                }
-            });
+                });
 
-            if (error) {
-                console.error('[Alumni Signup] Supabase Auth Error:', error);
-                if (error.message.toLowerCase().includes('already registered')) {
-                    throw new Error('An account with this email already exists. Please log in.');
+                if (error) {
+                    console.error('[Alumni Signup] Supabase Auth Error:', error);
+                    if (error.message.toLowerCase().includes('already registered')) {
+                        throw new Error('An account with this email already exists. Please log in.');
+                    }
+                    throw new Error(error.message);
                 }
-                throw new Error(error.message);
+
+                if (!data || !data.user) {
+                    throw new Error('Account creation failed: no user data returned.');
+                }
+                userId = data.user.id;
+            } else {
+                // Google Authenticated flow
+                userId = (client.auth.currentUser && client.auth.currentUser.id) || 
+                         googleUserData.id || 
+                         (typeof crypto !== 'undefined' && crypto.randomUUID ? crypto.randomUUID() : 'usr_' + Date.now());
             }
 
-            if (!data || !data.user) {
-                console.error('[Alumni Signup] No user returned in response:', data);
-                throw new Error('Account creation failed: no user data returned from authentication service.');
-            }
-
-            const userId = data.user.id;
-            console.log('[Alumni Signup] ✅ Auth signup successful! User ID:', userId);
+            console.log('[Alumni Signup] ✅ Auth verified! User ID:', userId);
 
             // Synchronize with public.users table
             const userRow = {
@@ -672,7 +1163,7 @@
                 console.warn('[Alumni Signup] public.alumni_profiles sync error:', profErr);
             }
 
-            // Save session to localStorage for application-wide compatibility
+            // Save session to localStorage
             localStorage.setItem('alumnix_user_session', JSON.stringify({ ...userRow, company, job_role: title }));
             localStorage.setItem('alumnix_user', JSON.stringify({ ...userRow, company, job_role: title }));
 
