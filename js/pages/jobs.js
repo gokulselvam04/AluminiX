@@ -7,19 +7,6 @@ document.addEventListener("DOMContentLoaded", () => {
   const user = window.authService?.requireAuth();
   if (!user) return;
 
-  const headerAction = document.getElementById("jobs-header-action");
-  const tabsContainer = document.getElementById("jobs-tabs-container");
-
-  // Show Alumni specific action buttons & tabs
-  if (user.role === "alumni" && headerAction) {
-    headerAction.innerHTML = `
-      <button class="btn btn-primary" id="btn-open-post-job">
-        <span>➕</span> Post a Job Opportunity
-      </button>
-    `;
-    if (tabsContainer) tabsContainer.style.display = "block";
-  }
-
   loadJobs("all", user);
   setupJobModal(user);
 

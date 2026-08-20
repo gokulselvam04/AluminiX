@@ -39,6 +39,10 @@ def handler(request):
             if not user_id or not title or not company or not description:
                 return build_response(400, {"error": "Missing required fields (title, company, description)"})
                 
+            user_res = supabase.table("users").select("role").eq("id", user_id).execute()
+            if not user_res.data or user_res.data[0].get("role") != "alumni":
+                return build_response(403, {"error": "Only alumni can post jobs"})
+
             # Get alumni_profile id for this user_id
             alum_res = supabase.table("alumni_profiles").select("id").eq("user_id", user_id).execute()
             if not alum_res.data or len(alum_res.data) == 0:

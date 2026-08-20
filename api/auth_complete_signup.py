@@ -18,24 +18,25 @@ def handler(request):
         elif hasattr(request, 'body'):
             body = json.loads(request.body) if isinstance(request.body, str) else request.body
             
-        user_id = body.get("user_id")
+        # Accept both 'id' and 'user_id' field names
+        user_id = body.get("id") or body.get("user_id")
         email = body.get("email")
         role = body.get("role", "student")
         full_name = body.get("full_name", "")
         department = body.get("department", "Computer Science & Engineering")
         institution = body.get("institution", "Karpagam Institute of Technology")
         
-        if not user_id or not email:
-            return build_response(400, {"error": "Missing user_id or email"})
-            
+        if not email:
+            return build_response(400, {"error": "Missing email"})
+
         admin_client = get_supabase_admin()
-        
-        # Check if user already exists
-        existing = admin_client.table("users").select("*").eq("id", user_id).execute()
-        if existing and existing.data and len(existing.data) > 0:
-            return build_response(200, {"message": "User record already exists", "user": existing.data[0]})
+
+        # If no user_id provided, generate one
+        if not user_id:
+            import uuid
+            user_id = str(uuid.uuid4())
             
-        # Insert user record
+        # Upsert user record (insert or update on conflict)
         user_row = {
             "id": user_id,
             "email": email,
@@ -45,7 +46,7 @@ def handler(request):
             "department": department
         }
         
-        res = admin_client.table("users").insert(user_row).execute()
+        res = admin_client.table("users").upsert(user_row).execute()
         
         if res and res.data:
             return build_response(201, {"success": True, "user": res.data[0]})

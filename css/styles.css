@@ -139,6 +139,8 @@ h3 { font-size: 1.25rem; }
 @media (max-width: 768px) {
   .main-content {
     margin-left: 0;
+    padding-bottom: calc(var(--bottom-nav-height) + env(safe-area-inset-bottom) + 20px);
+    overflow-x: hidden;
   }
 }
 
@@ -319,7 +321,8 @@ h3 { font-size: 1.25rem; }
   bottom: 0;
   left: 0;
   right: 0;
-  height: var(--bottom-nav-height);
+  height: calc(var(--bottom-nav-height) + env(safe-area-inset-bottom));
+  padding-bottom: env(safe-area-inset-bottom);
   background-color: var(--surface-card);
   border-top: 1px solid var(--border-default);
   z-index: 45;
@@ -338,6 +341,9 @@ h3 { font-size: 1.25rem; }
   gap: 2px;
   padding: 6px;
   width: 20%;
+  height: 100%;
+  min-height: 44px;
+  min-width: 44px;
   text-align: center;
 }
 
@@ -359,10 +365,23 @@ h3 { font-size: 1.25rem; }
     box-shadow: var(--shadow-modal);
   }
   .mobile-hamburger {
-    display: block;
+    display: none; /* Hide hamburger as we use bottom tabs on mobile */
   }
   .bottom-tab-bar {
     display: flex;
+  }
+  
+  /* Collapse grids to 1 column */
+  .page-wrapper > div[style*="grid-template-columns"] {
+    grid-template-columns: 1fr !important;
+  }
+  #dashboard-stats-grid, #dashboard-body-grid, #alumni-cards-grid, #jobs-grid-container {
+    grid-template-columns: 1fr !important;
+  }
+  
+  /* Touch target size for buttons */
+  .btn, .form-control {
+    min-height: 44px;
   }
 }
 

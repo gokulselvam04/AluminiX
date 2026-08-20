@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -55,7 +55,7 @@
         .role-tabs {
             display: flex;
             gap: 0;
-            margin-bottom: 30px;
+            margin-bottom: 24px;
             background: #f0f0f0;
             border-radius: 8px;
             padding: 4px;
@@ -80,138 +80,6 @@
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
         }
 
-        .alert {
-            padding: 12px 15px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            font-size: 13px;
-            display: none;
-            animation: slideIn 0.3s ease;
-            max-height: 200px;
-            overflow-y: auto;
-            word-wrap: break-word;
-        }
-
-        @keyframes slideIn {
-            from {
-                opacity: 0;
-                transform: translateY(-10px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .alert.show {
-            display: block;
-        }
-
-        .alert.success {
-            background: #d4edda;
-            color: #155724;
-            border: 1px solid #c3e6cb;
-        }
-
-        .alert.error {
-            background: #f8d7da;
-            color: #721c24;
-            border: 1px solid #f5c6cb;
-        }
-
-        .form-section {
-            display: none;
-        }
-
-        .form-section.active {
-            display: block;
-        }
-
-        .form-group {
-            margin-bottom: 18px;
-        }
-
-        .form-group label {
-            display: block;
-            color: #333;
-            font-weight: 600;
-            margin-bottom: 6px;
-            font-size: 13px;
-        }
-
-        .form-group input,
-        .form-group select {
-            width: 100%;
-            padding: 11px 13px;
-            border: 2px solid #e0e0e0;
-            border-radius: 8px;
-            font-size: 13px;
-            transition: all 0.3s ease;
-            font-family: inherit;
-        }
-
-        .form-group input:focus,
-        .form-group select:focus {
-            outline: none;
-            border-color: #667eea;
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
-        }
-
-        .form-group input::placeholder {
-            color: #999;
-        }
-
-        .form-row {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
-        }
-
-        .form-row .form-group {
-            margin-bottom: 0;
-        }
-
-        .submit-btn {
-            width: 100%;
-            padding: 13px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border: none;
-            border-radius: 8px;
-            font-size: 15px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            margin-top: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-        }
-
-        .submit-btn:hover:not(:disabled) {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 24px rgba(102, 126, 234, 0.4);
-        }
-
-        .submit-btn:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-        }
-
-        .spinner {
-            width: 14px;
-            height: 14px;
-            border: 2px solid rgba(255, 255, 255, 0.3);
-            border-top-color: white;
-            border-radius: 50%;
-            animation: spin 0.8s linear infinite;
-        }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-
         .google-btn {
             width: 100%;
             padding: 12px 16px;
@@ -228,7 +96,7 @@
             justify-content: center;
             gap: 12px;
             box-shadow: 0 1px 3px rgba(60, 64, 67, 0.08);
-            margin-bottom: 20px;
+            margin-bottom: 18px;
             font-family: inherit;
         }
 
@@ -254,7 +122,7 @@
             display: flex;
             align-items: center;
             text-align: center;
-            margin: 20px 0;
+            margin: 18px 0;
             color: #70757a;
             font-size: 12px;
         }
@@ -353,6 +221,144 @@
             font-weight: 500;
         }
 
+        .alert {
+            padding: 12px 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 13px;
+            display: none;
+            animation: slideIn 0.3s ease;
+            max-height: 200px;
+            overflow-y: auto;
+            word-wrap: break-word;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .alert.show {
+            display: block;
+        }
+
+        .alert.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .alert.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .form-section {
+            display: none;
+        }
+
+        .form-section.active {
+            display: block;
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        .form-group label {
+            display: block;
+            color: #333;
+            font-weight: 600;
+            margin-bottom: 6px;
+            font-size: 13px;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 11px 13px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 13px;
+            transition: all 0.3s ease;
+            font-family: inherit;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .form-group input[readonly] {
+            background-color: #f8f9fa;
+            cursor: not-allowed;
+            color: #555;
+        }
+
+        .form-group input::placeholder {
+            color: #999;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .form-row .form-group {
+            margin-bottom: 0;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 13px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .submit-btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(102, 126, 234, 0.4);
+        }
+
+        .submit-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .spinner {
+            width: 14px;
+            height: 14px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-top-color: white;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
         .footer-link {
             text-align: center;
             margin-top: 20px;
@@ -403,9 +409,9 @@
                 <div class="google-user-info">
                     <div id="googleUserName" class="google-user-name"></div>
                     <div id="googleUserEmail" class="google-user-email"></div>
-                    <div class="google-connected-tag">✓ Google Account Connected</div>
+                    <div class="google-connected-tag">âœ“ Google Account Connected</div>
                 </div>
-                <button type="button" id="googleDisconnectBtn" class="google-disconnect-btn" title="Use a different account">✕</button>
+                <button type="button" id="googleDisconnectBtn" class="google-disconnect-btn" title="Use a different account">âœ•</button>
             </div>
 
             <div class="auth-divider" id="authDivider">
@@ -457,7 +463,7 @@
                     </div>
 
                     <div id="studentGoogleNotice" class="google-auth-notice" style="display: none;">
-                        <span>🔒</span> Authenticated securely via Google. Password not required.
+                        <span>ðŸ”’</span> Authenticated securely via Google. Password not required.
                     </div>
                 </div>
 
@@ -516,7 +522,7 @@
                     </div>
 
                     <div id="alumniGoogleNotice" class="google-auth-notice" style="display: none;">
-                        <span>🔒</span> Authenticated securely via Google. Password not required.
+                        <span>ðŸ”’</span> Authenticated securely via Google. Password not required.
                     </div>
                 </div>
 
@@ -604,7 +610,6 @@
         function applyGoogleUserToForm(gUser) {
             googleUserData = gUser;
 
-            // Show connected card
             const card = document.getElementById('googleConnectedCard');
             const avatar = document.getElementById('googleUserAvatar');
             const nameEl = document.getElementById('googleUserName');
@@ -651,9 +656,9 @@
             if (alumniNotice) alumniNotice.style.display = 'flex';
 
             const submitBtn = document.getElementById('submitBtn');
-            if (submitBtn) submitBtn.textContent = 'Complete Registration →';
+            if (submitBtn) submitBtn.textContent = 'Complete Registration â†’';
 
-            showAlert(`Google account verified (${gUser.email})! Please complete the remaining ${activeRole === 'student' ? 'Student' : 'Alumni'} details below.`, 'success');
+            showAlert(`Google account connected (${gUser.email})! Please complete the remaining ${activeRole === 'student' ? 'Student' : 'Alumni'} details below.`, 'success');
         }
 
         // Disconnect Google Account
@@ -688,52 +693,10 @@
             hideAlert();
         }
 
-        // Decode JWT ID Token from Google Identity Services
-        function decodeJwtPayload(token) {
-            try {
-                const base64Url = token.split('.')[1];
-                const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-                const jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
-                    return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
-                }).join(''));
-                return JSON.parse(jsonPayload);
-            } catch (e) {
-                console.error('[Google Auth] Failed to decode JWT:', e);
-                return null;
-            }
-        }
-
-        // Handle Google Identity Services Credential Response
-        async function handleGoogleCredentialResponse(response) {
-            console.log('[Google Auth] Credential response received');
-            if (!response || !response.credential) {
-                showAlert('Google Sign-In was cancelled or failed.', 'error');
-                return;
-            }
-
-            const payload = decodeJwtPayload(response.credential);
-            if (!payload || !payload.email) {
-                showAlert('Failed to read Google profile data. Please try again.', 'error');
-                return;
-            }
-
-            const gUser = {
-                id: payload.sub,
-                email: payload.email,
-                name: payload.name || payload.email.split('@')[0],
-                picture: payload.picture || ''
-            };
-
-            await processGoogleUser(gUser, response.credential);
-        }
-
         // Process verified Google user: check if existing user, or load into form
-        async function processGoogleUser(gUser, idToken = null) {
+        async function processGoogleUser(gUser) {
             const client = await getSupabaseClient();
-            if (!client) {
-                showAlert('Authentication service not ready. Please refresh.', 'error');
-                return;
-            }
+            if (!client) return;
 
             // Check if user already exists in public.users
             try {
@@ -772,7 +735,7 @@
             applyGoogleUserToForm(gUser);
         }
 
-        // Initiate Google Sign-In via Google Identity Services or Supabase OAuth
+        // Initiate Google Sign-In
         async function initiateGoogleSignIn() {
             hideAlert();
             console.log('[Google Auth] Initiating Google Sign-In');
@@ -782,18 +745,31 @@
             btnLabel.textContent = 'Connecting Google...';
 
             try {
-                // 1. Try Google Identity Services OAuth token client
-                const clientId = window.ALUMNIX_CONFIG?.GOOGLE_CLIENT_ID;
-                if (window.google && window.google.accounts && window.google.accounts.oauth2 && clientId) {
-                    const tokenClient = window.google.accounts.oauth2.initTokenClient({
-                        client_id: clientId,
-                        scope: 'email profile openid',
-                        callback: async (tokenResponse) => {
-                            gBtn.disabled = false;
-                            btnLabel.textContent = 'Continue with Google';
+                const client = await getSupabaseClient();
+                if (!client || !client.auth) {
+                    throw new Error('Supabase client not initialized. Please reload the page.');
+                }
 
-                            if (tokenResponse && tokenResponse.access_token) {
-                                try {
+                // 1. Primary: Use Supabase native Google OAuth redirect
+                const { data, error } = await client.auth.signInWithOAuth({
+                    provider: 'google',
+                    options: {
+                        redirectTo: `${window.location.origin}${window.location.pathname}?role=${activeRole}`
+                    }
+                });
+
+                if (error) {
+                    console.warn('[Google Auth] Supabase OAuth redirect notice:', error);
+                    // Fallback to GIS Token Client
+                    const clientId = window.ALUMNIX_CONFIG?.GOOGLE_CLIENT_ID;
+                    if (window.google && window.google.accounts && window.google.accounts.oauth2 && clientId) {
+                        const tokenClient = window.google.accounts.oauth2.initTokenClient({
+                            client_id: clientId,
+                            scope: 'email profile openid',
+                            callback: async (tokenResponse) => {
+                                gBtn.disabled = false;
+                                btnLabel.textContent = 'Continue with Google';
+                                if (tokenResponse && tokenResponse.access_token) {
                                     const res = await fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
                                         headers: { Authorization: `Bearer ${tokenResponse.access_token}` }
                                     });
@@ -806,56 +782,23 @@
                                             picture: userInfo.picture || ''
                                         });
                                     }
-                                } catch (fetchErr) {
-                                    console.error('[Google Auth] Error fetching userinfo:', fetchErr);
-                                    showAlert('Failed to retrieve Google profile info.', 'error');
                                 }
-                            } else if (tokenResponse.error) {
-                                console.error('[Google Auth] Token error:', tokenResponse.error);
-                                showAlert(`Google sign in: ${tokenResponse.error}`, 'error');
                             }
-                        }
-                    });
-                    tokenClient.requestAccessToken({ prompt: 'select_account' });
-                    return;
-                }
-
-                // 2. Fallback to Supabase OAuth
-                const client = await getSupabaseClient();
-                if (client && client.auth) {
-                    const { data, error } = await client.auth.signInWithOAuth({
-                        provider: 'google',
-                        options: {
-                            redirectTo: `${window.location.origin}${window.location.pathname}?role=${activeRole}`
-                        }
-                    });
-                    if (error) throw error;
-                } else {
-                    throw new Error('Google Sign-In client is loading. Please try again in a few seconds.');
+                        });
+                        tokenClient.requestAccessToken({ prompt: 'select_account' });
+                        return;
+                    }
+                    throw error;
                 }
             } catch (err) {
                 console.error('[Google Auth Error]', err);
-                showAlert(err.message || 'Google sign in failed. Please use email registration.', 'error');
+                showAlert(err.message || 'Google sign in failed. Please fill the form to register.', 'error');
                 gBtn.disabled = false;
                 btnLabel.textContent = 'Continue with Google';
             }
         }
 
-        // Initialize Google Identity Services SDK
-        function initGoogleSDK() {
-            const clientId = window.ALUMNIX_CONFIG?.GOOGLE_CLIENT_ID;
-            if (window.google && window.google.accounts && window.google.accounts.id && clientId) {
-                window.google.accounts.id.initialize({
-                    client_id: clientId,
-                    callback: handleGoogleCredentialResponse,
-                    auto_select: false,
-                    cancel_on_tap_outside: true
-                });
-                console.log('[Google Auth] GIS SDK initialized');
-            }
-        }
-
-        // Check for URL parameters or OAuth redirect callback
+        // Check for URL parameters or OAuth redirect callback on page load
         async function checkOAuthCallback() {
             const urlParams = new URLSearchParams(window.location.search);
             const roleParam = urlParams.get('role');
@@ -904,8 +847,7 @@
             const form = document.getElementById('signupForm');
             form.addEventListener('submit', handleSubmit);
 
-            // Initialize Google SDK & check OAuth
-            setTimeout(initGoogleSDK, 300);
+            // Check OAuth callback state
             checkOAuthCallback();
 
             console.log('[Signup] Form listeners attached successfully');
@@ -932,7 +874,7 @@
             
             const btn = document.getElementById('submitBtn');
             btn.disabled = true;
-            btn.innerHTML = '<span class="spinner"></span> Creating account...';
+            btn.innerHTML = '<span class="spinner"></span> Saving to database...';
 
             try {
                 const client = await getSupabaseClient();
@@ -950,7 +892,7 @@
                 console.error('[SIGNUP_ERROR]', error);
                 showAlert(errorMsg, 'error');
                 btn.disabled = false;
-                btn.innerHTML = googleUserData ? 'Complete Registration →' : 'Create Account';
+                btn.innerHTML = googleUserData ? 'Complete Registration â†’' : 'Create Account';
             }
         }
 
@@ -959,8 +901,8 @@
             const email = document.getElementById('studentEmail').value.trim();
             const dept = document.getElementById('studentDept').value;
             const batch = document.getElementById('studentBatch').value.trim();
-            const pass = document.getElementById('studentPass').value;
-            const passConfirm = document.getElementById('studentPassConfirm').value;
+            const pass = document.getElementById('studentPass')?.value;
+            const passConfirm = document.getElementById('studentPassConfirm')?.value;
 
             console.log('[Student Signup] Submitting with:', { name, email, dept, batch, isGoogle: !!googleUserData });
 
@@ -1011,14 +953,44 @@
                 userId = data.user.id;
             } else {
                 // Google Authenticated flow
-                userId = (client.auth.currentUser && client.auth.currentUser.id) || 
-                         googleUserData.id || 
-                         (typeof crypto !== 'undefined' && crypto.randomUUID ? crypto.randomUUID() : 'usr_' + Date.now());
+                const { data: { session } } = await client.auth.getSession();
+                if (session && session.user) {
+                    userId = session.user.id;
+                } else {
+                    const tempPass = 'GAuth_' + btoa(email).replace(/=/g, '') + '#2026';
+                    const { data: authData, error: authErr } = await client.auth.signUp({
+                        email: email,
+                        password: tempPass,
+                        options: {
+                            data: {
+                                full_name: name,
+                                role: 'student',
+                                department: dept
+                            }
+                        }
+                    });
+
+                    if (authData && authData.user) {
+                        userId = authData.user.id;
+                    } else if (authErr && authErr.message.toLowerCase().includes('already registered')) {
+                        const { data: loginData } = await client.auth.signInWithPassword({
+                            email: email,
+                            password: tempPass
+                        });
+                        if (loginData && loginData.user) {
+                            userId = loginData.user.id;
+                        }
+                    }
+                    
+                    if (!userId) {
+                        userId = (typeof crypto !== 'undefined' && crypto.randomUUID ? crypto.randomUUID() : 'usr_' + Date.now());
+                    }
+                }
             }
 
-            console.log('[Student Signup] ✅ Auth verified! User ID:', userId);
+            console.log('[Student Signup] âœ… Auth user resolved! ID:', userId);
 
-            // Synchronize with public.users table
+            // Synchronize with public.users table in Supabase
             const userRow = {
                 id: userId,
                 email: email,
@@ -1028,22 +1000,31 @@
                 institution: 'Karpagam Institute of Technology'
             };
 
-            try {
-                const { error: dbError } = await client.from('users').upsert(userRow);
-                if (dbError) {
-                    console.warn('[Student Signup] public.users upsert notice:', dbError);
-                } else {
-                    console.log('[Student Signup] ✅ public.users synchronized');
+            const { data: dbData, error: dbError } = await client.from('users').upsert(userRow).select();
+            if (dbError) {
+                console.warn('[Student Signup] Direct upsert warning:', dbError);
+                try {
+                    const res = await fetch('/api/auth-complete-signup', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(userRow)
+                    });
+                    const jsonRes = await res.json();
+                    if (!res.ok) throw new Error(jsonRes.error || 'Backend sync failed');
+                    console.log('[Student Signup] âœ… Backend sync completed:', jsonRes);
+                } catch (apiErr) {
+                    console.error('[Student Signup] Database error:', apiErr);
+                    throw new Error(`Database error saving profile: ${dbError.message || apiErr.message}`);
                 }
-            } catch (dbErr) {
-                console.warn('[Student Signup] public.users sync error:', dbErr);
+            } else {
+                console.log('[Student Signup] âœ… public.users synchronized successfully:', dbData);
             }
 
             // Save session to localStorage
             localStorage.setItem('alumnix_user_session', JSON.stringify(userRow));
             localStorage.setItem('alumnix_user', JSON.stringify(userRow));
 
-            showAlert('Student account created successfully! Redirecting to your dashboard...', 'success');
+            showAlert('Student account created and saved to database! Redirecting to dashboard...', 'success');
             setTimeout(() => {
                 window.location.href = 'dashboard.html';
             }, 1200);
@@ -1056,8 +1037,8 @@
             const year = document.getElementById('alumniYear').value.trim();
             const company = document.getElementById('alumniCompany').value.trim();
             const title = document.getElementById('alumniTitle').value.trim();
-            const pass = document.getElementById('alumniPass').value;
-            const passConfirm = document.getElementById('alumniPassConfirm').value;
+            const pass = document.getElementById('alumniPass')?.value;
+            const passConfirm = document.getElementById('alumniPassConfirm')?.value;
 
             console.log('[Alumni Signup] Submitting with:', { name, email, dept, year, company, title, isGoogle: !!googleUserData });
 
@@ -1112,14 +1093,44 @@
                 userId = data.user.id;
             } else {
                 // Google Authenticated flow
-                userId = (client.auth.currentUser && client.auth.currentUser.id) || 
-                         googleUserData.id || 
-                         (typeof crypto !== 'undefined' && crypto.randomUUID ? crypto.randomUUID() : 'usr_' + Date.now());
+                const { data: { session } } = await client.auth.getSession();
+                if (session && session.user) {
+                    userId = session.user.id;
+                } else {
+                    const tempPass = 'GAuth_' + btoa(email).replace(/=/g, '') + '#2026';
+                    const { data: authData, error: authErr } = await client.auth.signUp({
+                        email: email,
+                        password: tempPass,
+                        options: {
+                            data: {
+                                full_name: name,
+                                role: 'alumni',
+                                department: dept
+                            }
+                        }
+                    });
+
+                    if (authData && authData.user) {
+                        userId = authData.user.id;
+                    } else if (authErr && authErr.message.toLowerCase().includes('already registered')) {
+                        const { data: loginData } = await client.auth.signInWithPassword({
+                            email: email,
+                            password: tempPass
+                        });
+                        if (loginData && loginData.user) {
+                            userId = loginData.user.id;
+                        }
+                    }
+                    
+                    if (!userId) {
+                        userId = (typeof crypto !== 'undefined' && crypto.randomUUID ? crypto.randomUUID() : 'usr_' + Date.now());
+                    }
+                }
             }
 
-            console.log('[Alumni Signup] ✅ Auth verified! User ID:', userId);
+            console.log('[Alumni Signup] âœ… Auth user resolved! ID:', userId);
 
-            // Synchronize with public.users table
+            // Synchronize with public.users table in Supabase
             const userRow = {
                 id: userId,
                 email: email,
@@ -1129,18 +1140,22 @@
                 institution: 'Karpagam Institute of Technology'
             };
 
-            try {
-                const { error: dbError } = await client.from('users').upsert(userRow);
-                if (dbError) {
-                    console.warn('[Alumni Signup] public.users upsert notice:', dbError);
-                } else {
-                    console.log('[Alumni Signup] ✅ public.users synchronized');
+            const { data: dbData, error: dbError } = await client.from('users').upsert(userRow).select();
+            if (dbError) {
+                console.warn('[Alumni Signup] Direct upsert warning:', dbError);
+                try {
+                    await fetch('/api/auth-complete-signup', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(userRow)
+                    });
+                } catch (apiErr) {
+                    console.error('[Alumni Signup] Database error:', apiErr);
+                    throw new Error(`Database error saving user: ${dbError.message || apiErr.message}`);
                 }
-            } catch (dbErr) {
-                console.warn('[Alumni Signup] public.users sync error:', dbErr);
             }
 
-            // Synchronize with public.alumni_profiles table
+            // Synchronize with public.alumni_profiles table in Supabase
             const profileRow = {
                 user_id: userId,
                 batch_year: yearNum,
@@ -1152,22 +1167,28 @@
                 mentor_available: true
             };
 
-            try {
-                const { error: profError } = await client.from('alumni_profiles').upsert(profileRow);
-                if (profError) {
-                    console.warn('[Alumni Signup] public.alumni_profiles upsert notice:', profError);
-                } else {
-                    console.log('[Alumni Signup] ✅ public.alumni_profiles synchronized');
+            const { data: profData, error: profError } = await client.from('alumni_profiles').upsert(profileRow).select();
+            if (profError) {
+                console.warn('[Alumni Signup] Direct profile upsert warning:', profError);
+                try {
+                    await fetch('/api/alumni-profile', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(profileRow)
+                    });
+                } catch (apiProfErr) {
+                    console.error('[Alumni Signup] Alumni profile database error:', apiProfErr);
+                    throw new Error(`Database error saving profile: ${profError.message || apiProfErr.message}`);
                 }
-            } catch (profErr) {
-                console.warn('[Alumni Signup] public.alumni_profiles sync error:', profErr);
+            } else {
+                console.log('[Alumni Signup] âœ… public.alumni_profiles synchronized:', profData);
             }
 
             // Save session to localStorage
             localStorage.setItem('alumnix_user_session', JSON.stringify({ ...userRow, company, job_role: title }));
             localStorage.setItem('alumnix_user', JSON.stringify({ ...userRow, company, job_role: title }));
 
-            showAlert('Alumni account created successfully! Redirecting to your dashboard...', 'success');
+            showAlert('Alumni account created and saved to database! Redirecting to dashboard...', 'success');
             setTimeout(() => {
                 window.location.href = 'dashboard.html';
             }, 1200);

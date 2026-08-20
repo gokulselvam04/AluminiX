@@ -50,6 +50,7 @@ CREATE TABLE IF NOT EXISTS public.mentorship_requests (
     alumni_id UUID NOT NULL REFERENCES public.alumni_profiles(id) ON DELETE CASCADE,
     message TEXT NOT NULL,
     status TEXT NOT NULL DEFAULT 'pending' CHECK (status IN ('pending', 'accepted', 'declined')),
+    initiated_by TEXT NOT NULL DEFAULT 'student' CHECK (initiated_by IN ('student', 'alumni')),
     created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
@@ -113,7 +114,7 @@ CREATE POLICY "Users can update their own record"
     ON public.users FOR UPDATE USING (auth.uid() = id);
 
 -- ALUMNI_PROFILES policies
-CREATE POLICY "Anyone authenticated can view mentor available alumni"
+CREATE POLICY "Anyone authenticated can view alumni profiles"
     ON public.alumni_profiles FOR SELECT USING (true);
 
 CREATE POLICY "Alumni can insert their profile"
@@ -132,8 +133,17 @@ CREATE POLICY "Alumni can insert jobs"
     );
 
 -- MENTORSHIP_REQUESTS policies
-CREATE POLICY "Students can create mentorship requests"
-    ON public.mentorship_requests FOR INSERT WITH CHECK (auth.uid() = student_id);
+CREATE POLICY "Students can create student-initiated requests"
+    ON public.mentorship_requests FOR INSERT WITH CHECK (
+        auth.uid() = student_id AND initiated_by = 'student'
+    );
+
+CREATE POLICY "Alumni can create alumni-initiated requests"
+    ON public.mentorship_requests FOR INSERT WITH CHECK (
+        EXISTS (
+            SELECT 1 FROM public.alumni_profiles WHERE id = alumni_id AND user_id = auth.uid()
+        ) AND initiated_by = 'alumni'
+    );
 
 CREATE POLICY "Users can view relevant mentorship requests"
     ON public.mentorship_requests FOR SELECT USING (
@@ -142,11 +152,12 @@ CREATE POLICY "Users can view relevant mentorship requests"
         )
     );
 
-CREATE POLICY "Alumni can update request status"
+CREATE POLICY "Only non-initiator can update request status"
     ON public.mentorship_requests FOR UPDATE USING (
-        EXISTS (
+        (initiated_by = 'student' AND EXISTS (
             SELECT 1 FROM public.alumni_profiles WHERE id = alumni_id AND user_id = auth.uid()
-        )
+        )) OR
+        (initiated_by = 'alumni' AND auth.uid() = student_id)
     );
 
 -- CHAT_MESSAGES policies

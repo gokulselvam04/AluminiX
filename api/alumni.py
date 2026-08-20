@@ -19,9 +19,14 @@ def handler(request):
         
         supabase = get_supabase_admin()
         
+        mentor_available = params.get("mentor_available")
+
         # Select alumni profiles joining user details
         query = supabase.table("alumni_profiles").select("*, users(full_name, email, institution)").order("created_at", desc=True)
         
+        if mentor_available and mentor_available.lower() == "true":
+            query = query.eq("mentor_available", True)
+
         if dept and dept != "All":
             query = query.ilike("department", f"%{dept}%")
         if industry and industry != "All":

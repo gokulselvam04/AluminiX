@@ -16,13 +16,15 @@ from api import (
     mentorship_request,
     profile_me,
     dashboard_stats,
-    impact_stats
+    impact_stats,
+    students
 )
 
 ROUTES = {
     "/api/auth-complete-signup": auth_complete_signup.app,
     "/api/alumni-profile": alumni_profile.app,
     "/api/alumni": alumni.app,
+    "/api/students": students.app,
     "/api/jobs": jobs.app,
     "/api/matchmaker-run": matchmaker_run.app,
     "/api/chat-message": chat_message.app,

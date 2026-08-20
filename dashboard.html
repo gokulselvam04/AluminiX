@@ -2,7 +2,8 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <link rel="manifest" href="manifest.json">
   <title>Dashboard — AlumniX</title>
   <link rel="stylesheet" href="css/styles.css">
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -67,7 +68,7 @@
             </div>
           </div>
 
-          <div class="card" style="background: var(--primary-light-tint); border: 1px solid rgba(76, 175, 80, 0.3);">
+          <div class="card" style="background: var(--primary-light-tint); border: 1px solid rgba(76, 175, 80, 0.3);" data-role="student">
             <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
               <div class="ai-avatar">🤖</div>
               <h4 style="font-size: 1rem; color: var(--primary-green);">AI Career Mentor</h4>

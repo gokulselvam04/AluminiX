@@ -21,11 +21,15 @@
           <h1 style="font-size: 2rem; margin-bottom: 4px;">Referral & Job Board</h1>
           <p class="text-sm text-muted">Exclusive job openings and referral opportunities posted directly by KIT Alumni.</p>
         </div>
-        <div id="jobs-header-action"></div>
+        <div id="jobs-header-action" data-role="alumni">
+          <button class="btn btn-primary" id="btn-open-post-job">
+            <span>➕</span> Post a Job Opportunity
+          </button>
+        </div>
       </div>
 
       <!-- Tabs Bar (for Alumni) -->
-      <div id="jobs-tabs-container" style="display: none; margin-bottom: 20px;">
+      <div id="jobs-tabs-container" data-role="alumni" style="margin-bottom: 20px;">
         <div class="segmented-toggle" style="max-width: 320px; margin-bottom: 0;">
           <button type="button" class="segmented-toggle-btn active" id="tab-all-jobs">All Listings</button>
           <button type="button" class="segmented-toggle-btn" id="tab-my-jobs">My Posted Jobs</button>

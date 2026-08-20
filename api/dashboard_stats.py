@@ -12,6 +12,11 @@ def handler(request):
         
         supabase = get_supabase_admin()
         
+        user_res = supabase.table("users").select("role").eq("id", user_id).execute()
+        if not user_res.data:
+            return build_response(404, {"error": "User not found"})
+        role = user_res.data[0].get("role")
+        
         if role == "alumni":
             # Alumni dashboard stats
             alum_res = supabase.table("alumni_profiles").select("id").eq("user_id", user_id).execute()
@@ -26,7 +31,7 @@ def handler(request):
                 pending_res = supabase.table("mentorship_requests").select("id", count="exact").eq("alumni_id", alumni_id).eq("status", "pending").execute()
                 pending_requests = pending_res.count if pending_res.count is not None else len(pending_res.data or [])
                 
-                # Mentees Mentored (accepted)
+                # Mentees Mentored (accepted) — both directions
                 accepted_res = supabase.table("mentorship_requests").select("id", count="exact").eq("alumni_id", alumni_id).eq("status", "accepted").execute()
                 mentees_mentored = accepted_res.count if accepted_res.count is not None else len(accepted_res.data or [])
             else:
@@ -46,9 +51,10 @@ def handler(request):
             
         else:
             # Student dashboard stats
-            # Alumni Connected
-            conn_res = supabase.table("mentorship_requests").select("id", count="exact").eq("student_id", user_id).eq("status", "accepted").execute()
-            connected_count = conn_res.count if conn_res.count is not None else len(conn_res.data or [])
+            # Alumni Connected — count accepted in BOTH directions
+            # Where student is the student_id OR student initiated and received from alumni
+            conn_res = supabase.table("mentorship_requests").select("id").eq("student_id", user_id).eq("status", "accepted").execute()
+            connected_count = len(conn_res.data or [])
             
             # AI Matches Run
             runs_res = supabase.table("matchmaker_runs").select("id", count="exact").eq("student_id", user_id).execute()

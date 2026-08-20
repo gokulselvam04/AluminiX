@@ -17,8 +17,9 @@ document.addEventListener("DOMContentLoaded", () => {
     const search = searchInput?.value.trim() || "";
     const dept = deptFilter?.value || "All";
     const industry = industryFilter?.value || "All";
+    const mentor_available = document.getElementById("dir-mentor-toggle")?.checked ? "true" : "";
 
-    window.apiClient.get("/api/alumni", { search, dept, industry })
+    window.apiClient.get("/api/alumni", { search, dept, industry, mentor_available })
       .then(res => {
         const list = res.alumni || [];
         if (countLabel) countLabel.textContent = `Showing ${list.length} Alumni Mentor${list.length === 1 ? '' : 's'}`;
@@ -38,6 +39,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   deptFilter?.addEventListener("change", loadAlumni);
   industryFilter?.addEventListener("change", loadAlumni);
+  document.getElementById("dir-mentor-toggle")?.addEventListener("change", loadAlumni);
 
   // Initial Load
   loadAlumni();
@@ -105,11 +107,13 @@ function renderAlumniGrid(alumniList) {
 
         <div style="border-top: 1px solid var(--border-default); padding-top: 14px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px;">
           <a href="${linkedin}" target="_blank" class="text-xs text-muted">🔗 LinkedIn</a>
-          ${isStudent && isMentorAvailable ? `
+          ${isMentorAvailable ? `
             <button type="button" class="btn btn-primary btn-sm dir-open-modal-btn"
               data-id="${alumniId}"
               data-name="${name}"
-              data-role="${jobRole} @ ${company}">
+              data-role-attr="student"
+              data-role="student"
+              data-job="${jobRole} @ ${company}">
               Request Mentorship
             </button>
           ` : ''}
@@ -123,10 +127,14 @@ function renderAlumniGrid(alumniList) {
     btn.addEventListener("click", () => {
       const id = btn.getAttribute("data-id");
       const name = btn.getAttribute("data-name");
-      const role = btn.getAttribute("data-role");
+      const role = btn.getAttribute("data-job");
       openDirectoryModal(id, name, role);
     });
   });
+
+  if (window.applyDataRoleFilters && currentUser) {
+    window.applyDataRoleFilters(currentUser.role);
+  }
 }
 
 function setupDirectoryModal() {
@@ -158,7 +166,8 @@ function setupDirectoryModal() {
       await window.apiClient.post("/api/mentorship-request", {
         student_id: user.id,
         alumni_id: alumniId,
-        message
+        message,
+        initiated_by: "student"
       });
 
       alert("Mentorship request sent successfully!");
