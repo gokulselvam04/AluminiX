@@ -157,12 +157,16 @@ function renderMatchCards(matches) {
           <a href="${linkedin}" target="_blank" class="text-xs text-muted" style="display: inline-flex; align-items: center; gap: 4px;">
             🔗 View LinkedIn Profile
           </a>
-          <button type="button" class="btn btn-primary btn-sm open-request-modal-btn" 
-            data-alumni-id="${alumniId}" 
-            data-alumni-name="${name}" 
-            data-alumni-role="${jobRole} @ ${company}">
-            📩 Request Mentorship
-          </button>
+          <div style="display: flex; gap: 8px;">
+            ${alum.whatsapp ? `<a href="https://wa.me/${alum.whatsapp.replace(/[^0-9]/g, '')}" target="_blank" class="btn btn-outline btn-sm">💬 WhatsApp</a>` : ''}
+            ${alum.whatsapp ? `<a href="tel:${alum.whatsapp}" class="btn btn-outline btn-sm">📞 Call</a>` : ''}
+            <button type="button" class="btn btn-primary btn-sm open-request-modal-btn" 
+              data-alumni-id="${alumniId}" 
+              data-alumni-name="${name}" 
+              data-alumni-role="${jobRole} @ ${company}">
+              📩 Request Mentorship
+            </button>
+          </div>
         </div>
 
       </div>

@@ -107,16 +107,20 @@ function renderAlumniGrid(alumniList) {
 
         <div style="border-top: 1px solid var(--border-default); padding-top: 14px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px;">
           <a href="${linkedin}" target="_blank" class="text-xs text-muted">🔗 LinkedIn</a>
-          ${isMentorAvailable ? `
-            <button type="button" class="btn btn-primary btn-sm dir-open-modal-btn"
-              data-id="${alumniId}"
-              data-name="${name}"
-              data-role-attr="student"
-              data-role="student"
-              data-job="${jobRole} @ ${company}">
-              Request Mentorship
-            </button>
-          ` : ''}
+          <div style="display: flex; gap: 6px;">
+            ${item.whatsapp ? `<a href="https://wa.me/${item.whatsapp.replace(/[^0-9]/g, '')}" target="_blank" class="btn btn-outline btn-sm">💬 WhatsApp</a>` : ''}
+            ${item.whatsapp ? `<a href="tel:${item.whatsapp}" class="btn btn-outline btn-sm">📞 Call</a>` : ''}
+            ${isMentorAvailable ? `
+              <button type="button" class="btn btn-primary btn-sm dir-open-modal-btn"
+                data-id="${alumniId}"
+                data-name="${name}"
+                data-role-attr="student"
+                data-role="student"
+                data-job="${jobRole} @ ${company}">
+                Request Mentorship
+              </button>
+            ` : ''}
+          </div>
         </div>
       </div>
     `;
