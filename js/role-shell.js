@@ -89,7 +89,7 @@ function renderAppShell(user, role, currentPath) {
             ☰
           </button>
           <a href="dashboard.html" class="logo-wrapper">
-            <div class="logo-emblem">✨</div>
+            <img src="images/logo.png" alt="AlumniX Logo" style="width: 36px; height: 36px; object-fit: contain;">
             <span><span class="logo-text-dark">Alumni</span><span class="logo-text-x">X</span></span>
           </a>
         </div>
@@ -139,7 +139,7 @@ function renderAppShell(user, role, currentPath) {
       <aside class="sidebar">
         <div class="sidebar-header">
           <a href="dashboard.html" class="logo-wrapper">
-            <div class="logo-emblem">✨</div>
+            <img src="images/logo.png" alt="AlumniX Logo" style="width: 36px; height: 36px; object-fit: contain;">
             <span><span class="logo-text-dark">Alumni</span><span class="logo-text-x">X</span></span>
           </a>
         </div>
