@@ -383,6 +383,7 @@
     <script src="https://accounts.google.com/gsi/client" async defer></script>
     <script src="js/config.js"></script>
     <script src="js/supabase-client.js"></script>
+    <script src="js/post-auth-modal.js"></script>
 
     <script>
         // Wait for Supabase to be ready
@@ -441,6 +442,23 @@
 
                 if (dbUser) {
                     console.log('[Login Google] Existing user verified in database:', dbUser);
+                    
+                    // Check if department is missing - show modal to collect it
+                    if (!dbUser.department || dbUser.department === 'Computer Science & Engineering') {
+                        console.log('[Login Google] Department missing or default, showing modal');
+                        showAlert(`Welcome back, ${dbUser.full_name}! Let's verify your department...`, 'success');
+                        
+                        const userObj = {
+                            id: dbUser.id,
+                            email: dbUser.email,
+                            full_name: dbUser.full_name,
+                            name: dbUser.full_name
+                        };
+                        
+                        window.postAuthModal.show(userObj, dbUser.role || selectedRole);
+                        return;
+                    }
+
                     showAlert(`Welcome back, ${dbUser.full_name}! Logging in...`, 'success');
 
                     const sessionObj = {

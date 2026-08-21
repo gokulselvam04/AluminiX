@@ -12,6 +12,7 @@
     { "src": "api/mentorship_request.py", "use": "@vercel/python" },
     { "src": "api/profile_me.py", "use": "@vercel/python" },
     { "src": "api/roadmap.py", "use": "@vercel/python" },
+    { "src": "api/students.py", "use": "@vercel/python" },
     {
       "src": "*.html",
       "use": "@vercel/static"
@@ -41,6 +42,10 @@
     {
       "src": "/api/alumni",
       "dest": "/api/alumni.py"
+    },
+    {
+      "src": "/api/students",
+      "dest": "/api/students.py"
     },
     {
       "src": "/api/jobs",
@@ -90,5 +95,14 @@
       "src": "/(.*)",
       "dest": "/$1"
     }
-  ]
+  ],
+  "env": {
+    "SUPABASE_URL": "@supabase_url",
+    "SUPABASE_ANON_KEY": "@supabase_anon_key",
+    "SUPABASE_SERVICE_ROLE_KEY": "@supabase_service_role_key",
+    "HF_API_TOKEN": "@hf_api_token",
+    "HF_MODEL": "@hf_model",
+    "COLLEGE_NAME": "Karpagam Institute of Technology",
+    "ALLOWED_STUDENT_EMAIL_DOMAIN": "@kite.ac.in"
+  }
 }

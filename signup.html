@@ -542,6 +542,7 @@
     <script src="https://accounts.google.com/gsi/client" async defer></script>
     <script src="js/config.js"></script>
     <script src="js/supabase-client.js"></script>
+    <script src="js/post-auth-modal.js"></script>
 
     <script>
         console.log('[Signup] Page loaded');
@@ -721,6 +722,12 @@
 
                     localStorage.setItem('alumnix_user_session', JSON.stringify(sessionObj));
                     localStorage.setItem('alumnix_user', JSON.stringify(sessionObj));
+
+                    // Check if department is missing - show modal
+                    if (!existingUser.department || existingUser.department === 'Computer Science & Engineering') {
+                        window.postAuthModal.show(sessionObj, existingUser.role);
+                        return;
+                    }
 
                     setTimeout(() => {
                         window.location.href = 'dashboard.html';
@@ -910,7 +917,7 @@
             if (!name) throw new Error('Full Name is required');
             if (!email) throw new Error('Email Address is required');
             if (!isValidEmail(email)) throw new Error('Please enter a valid email address');
-            if (!dept) throw new Error('Please select your department');
+            if (!dept || dept === '') throw new Error('Department is REQUIRED - please select your department');
             if (!batch) throw new Error('Batch year is required');
             const batchNum = parseInt(batch, 10);
             if (isNaN(batchNum) || batchNum < 2000 || batchNum > 2035) {
@@ -1055,7 +1062,7 @@
             if (!name) throw new Error('Full Name is required');
             if (!email) throw new Error('Email Address is required');
             if (!isValidEmail(email)) throw new Error('Please enter a valid email address');
-            if (!dept) throw new Error('Please select your department');
+            if (!dept || dept === '') throw new Error('Department is REQUIRED - please select your department');
             if (!year) throw new Error('Graduation year is required');
             const yearNum = parseInt(year, 10);
             if (isNaN(yearNum) || yearNum < 1980 || yearNum > 2026) {
