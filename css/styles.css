@@ -725,3 +725,11 @@ textarea.form-control {
   animation: spin 0.8s linear infinite;
   display: inline-block;
 }
+
+.logo-img {
+  width: 44px;
+  height: 44px;
+  object-fit: contain;
+  mix-blend-mode: multiply;
+}
+
