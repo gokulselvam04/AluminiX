@@ -1000,24 +1000,33 @@
                 institution: 'Karpagam Institute of Technology'
             };
 
-            const { data: dbData, error: dbError } = await client.from('users').upsert(userRow).select();
-            if (dbError) {
-                console.warn('[Student Signup] Direct upsert warning:', dbError);
-                try {
-                    const res = await fetch('/api/auth-complete-signup', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(userRow)
-                    });
-                    const jsonRes = await res.json();
-                    if (!res.ok) throw new Error(jsonRes.error || 'Backend sync failed');
-                    console.log('[Student Signup] âœ… Backend sync completed:', jsonRes);
-                } catch (apiErr) {
-                    console.error('[Student Signup] Database error:', apiErr);
-                    throw new Error(`Database error saving profile: ${dbError.message || apiErr.message}`);
+            // Always use backend API first (bypasses RLS with service_role key)
+            let dbSaved = false;
+            try {
+                const res = await fetch('/api/auth-complete-signup', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(userRow)
+                });
+                const jsonRes = await res.json();
+                if (res.ok && jsonRes.success) {
+                    console.log('[Student Signup] ✅ Backend API sync completed:', jsonRes);
+                    dbSaved = true;
+                } else {
+                    console.warn('[Student Signup] Backend API returned error:', jsonRes);
                 }
-            } else {
-                console.log('[Student Signup] âœ… public.users synchronized successfully:', dbData);
+            } catch (apiErr) {
+                console.warn('[Student Signup] Backend API unreachable, trying direct insert:', apiErr);
+            }
+
+            // Fallback: try direct client insert if API failed
+            if (!dbSaved) {
+                const { data: dbData, error: dbError } = await client.from('users').upsert(userRow).select();
+                if (dbError) {
+                    console.error('[Student Signup] Direct upsert also failed:', dbError);
+                    throw new Error(`Database error saving profile: ${dbError.message}`);
+                }
+                console.log('[Student Signup] ✅ Direct upsert succeeded:', dbData);
             }
 
             // Save session to localStorage
@@ -1140,23 +1149,33 @@
                 institution: 'Karpagam Institute of Technology'
             };
 
-            const { data: dbData, error: dbError } = await client.from('users').upsert(userRow).select();
-            if (dbError) {
-                console.warn('[Alumni Signup] Direct upsert warning:', dbError);
-                try {
-                    const res = await fetch('/api/auth-complete-signup', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(userRow)
-                    });
-                    if (!res.ok) {
-                        const jsonRes = await res.json().catch(() => ({}));
-                        throw new Error(jsonRes.error || 'Backend sync failed');
-                    }
-                } catch (apiErr) {
-                    console.error('[Alumni Signup] Database error:', apiErr);
-                    throw new Error(`Database error saving user: ${dbError.message || apiErr.message}`);
+            // Always use backend API first (bypasses RLS with service_role key)
+            let dbSaved = false;
+            try {
+                const res = await fetch('/api/auth-complete-signup', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(userRow)
+                });
+                const jsonRes = await res.json();
+                if (res.ok && jsonRes.success) {
+                    console.log('[Alumni Signup] ✅ Backend API sync completed:', jsonRes);
+                    dbSaved = true;
+                } else {
+                    console.warn('[Alumni Signup] Backend API returned error:', jsonRes);
                 }
+            } catch (apiErr) {
+                console.warn('[Alumni Signup] Backend API unreachable, trying direct insert:', apiErr);
+            }
+
+            // Fallback: try direct client insert if API failed
+            if (!dbSaved) {
+                const { data: dbData, error: dbError } = await client.from('users').upsert(userRow).select();
+                if (dbError) {
+                    console.error('[Alumni Signup] Direct upsert also failed:', dbError);
+                    throw new Error(`Database error saving user: ${dbError.message}`);
+                }
+                console.log('[Alumni Signup] ✅ Direct upsert succeeded:', dbData);
             }
 
             // Synchronize with public.alumni_profiles table in Supabase
@@ -1173,7 +1192,7 @@
 
             const { data: profData, error: profError } = await client.from('alumni_profiles').upsert(profileRow).select();
             if (profError) {
-                console.warn('[Alumni Signup] Direct profile upsert warning:', profError);
+                console.warn('[Alumni Signup] Direct profile upsert warning, trying backend API:', profError);
                 try {
                     const res = await fetch('/api/alumni-profile', {
                         method: 'POST',
@@ -1181,12 +1200,10 @@
                         body: JSON.stringify(profileRow)
                     });
                     if (!res.ok) {
-                        const jsonRes = await res.json().catch(() => ({}));
-                        throw new Error(jsonRes.error || 'Backend profile sync failed');
+                        console.warn('[Alumni Signup] Backend profile API also failed, but continuing...');
                     }
                 } catch (apiProfErr) {
-                    console.error('[Alumni Signup] Alumni profile database error:', apiProfErr);
-                    throw new Error(`Database error saving profile data: ${profError.message || apiProfErr.message}`);
+                    console.warn('[Alumni Signup] Alumni profile save warning (non-fatal):', apiProfErr);
                 }
             } else {
                 console.log('[Alumni Signup] ✅ public.alumni_profiles synchronized:', profData);
