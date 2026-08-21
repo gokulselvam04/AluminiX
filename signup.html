@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -1144,11 +1144,15 @@
             if (dbError) {
                 console.warn('[Alumni Signup] Direct upsert warning:', dbError);
                 try {
-                    await fetch('/api/auth-complete-signup', {
+                    const res = await fetch('/api/auth-complete-signup', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify(userRow)
                     });
+                    if (!res.ok) {
+                        const jsonRes = await res.json().catch(() => ({}));
+                        throw new Error(jsonRes.error || 'Backend sync failed');
+                    }
                 } catch (apiErr) {
                     console.error('[Alumni Signup] Database error:', apiErr);
                     throw new Error(`Database error saving user: ${dbError.message || apiErr.message}`);
@@ -1171,17 +1175,21 @@
             if (profError) {
                 console.warn('[Alumni Signup] Direct profile upsert warning:', profError);
                 try {
-                    await fetch('/api/alumni-profile', {
+                    const res = await fetch('/api/alumni-profile', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify(profileRow)
                     });
+                    if (!res.ok) {
+                        const jsonRes = await res.json().catch(() => ({}));
+                        throw new Error(jsonRes.error || 'Backend profile sync failed');
+                    }
                 } catch (apiProfErr) {
                     console.error('[Alumni Signup] Alumni profile database error:', apiProfErr);
-                    throw new Error(`Database error saving profile: ${profError.message || apiProfErr.message}`);
+                    throw new Error(`Database error saving profile data: ${profError.message || apiProfErr.message}`);
                 }
             } else {
-                console.log('[Alumni Signup] âœ… public.alumni_profiles synchronized:', profData);
+                console.log('[Alumni Signup] ✅ public.alumni_profiles synchronized:', profData);
             }
 
             // Save session to localStorage
