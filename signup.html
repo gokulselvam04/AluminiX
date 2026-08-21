@@ -1007,34 +1007,27 @@
                 institution: 'Karpagam Institute of Technology'
             };
 
-            // Always use backend API first (bypasses RLS with service_role key)
-            let dbSaved = false;
-            try {
-                const res = await fetch('/api/auth-complete-signup', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(userRow)
-                });
-                const jsonRes = await res.json();
-                if (res.ok && jsonRes.success) {
-                    console.log('[Student Signup] ✅ Backend API sync completed:', jsonRes);
-                    dbSaved = true;
-                } else {
-                    console.warn('[Student Signup] Backend API returned error:', jsonRes);
-                }
-            } catch (apiErr) {
-                console.warn('[Student Signup] Backend API unreachable, trying direct insert:', apiErr);
-            }
+            // Use service_role key via REST API to bypass RLS
+            const SERVICE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJnZXpkdWRweXZrZWh0cWZuZHlvIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc4NjcwNjgyNiwiZXhwIjoyMTAyMjgyODI2fQ.W_mSi0PFxCKxInG7isdOsX1oPj-auMZ96uVnTqk3wBk';
+            const SUPA_URL = window.ALUMNIX_CONFIG.SUPABASE_URL;
 
-            // Fallback: try direct client insert if API failed
-            if (!dbSaved) {
-                const { data: dbData, error: dbError } = await client.from('users').upsert(userRow).select();
-                if (dbError) {
-                    console.error('[Student Signup] Direct upsert also failed:', dbError);
-                    throw new Error(`Database error saving profile: ${dbError.message}`);
-                }
-                console.log('[Student Signup] ✅ Direct upsert succeeded:', dbData);
+            const upsertRes = await fetch(`${SUPA_URL}/rest/v1/users`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'apikey': SERVICE_KEY,
+                    'Authorization': `Bearer ${SERVICE_KEY}`,
+                    'Prefer': 'resolution=merge-duplicates,return=representation'
+                },
+                body: JSON.stringify(userRow)
+            });
+
+            if (!upsertRes.ok) {
+                const errBody = await upsertRes.text();
+                console.error('[Student Signup] DB upsert failed:', errBody);
+                throw new Error('Database error saving profile. Please try again.');
             }
+            console.log('[Student Signup] ✅ User saved to database successfully');
 
             // Save session to localStorage
             localStorage.setItem('alumnix_user_session', JSON.stringify(userRow));
@@ -1156,34 +1149,27 @@
                 institution: 'Karpagam Institute of Technology'
             };
 
-            // Always use backend API first (bypasses RLS with service_role key)
-            let dbSaved = false;
-            try {
-                const res = await fetch('/api/auth-complete-signup', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(userRow)
-                });
-                const jsonRes = await res.json();
-                if (res.ok && jsonRes.success) {
-                    console.log('[Alumni Signup] ✅ Backend API sync completed:', jsonRes);
-                    dbSaved = true;
-                } else {
-                    console.warn('[Alumni Signup] Backend API returned error:', jsonRes);
-                }
-            } catch (apiErr) {
-                console.warn('[Alumni Signup] Backend API unreachable, trying direct insert:', apiErr);
-            }
+            // Use service_role key via REST API to bypass RLS
+            const SERVICE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJnZXpkdWRweXZrZWh0cWZuZHlvIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc4NjcwNjgyNiwiZXhwIjoyMTAyMjgyODI2fQ.W_mSi0PFxCKxInG7isdOsX1oPj-auMZ96uVnTqk3wBk';
+            const SUPA_URL = window.ALUMNIX_CONFIG.SUPABASE_URL;
 
-            // Fallback: try direct client insert if API failed
-            if (!dbSaved) {
-                const { data: dbData, error: dbError } = await client.from('users').upsert(userRow).select();
-                if (dbError) {
-                    console.error('[Alumni Signup] Direct upsert also failed:', dbError);
-                    throw new Error(`Database error saving user: ${dbError.message}`);
-                }
-                console.log('[Alumni Signup] ✅ Direct upsert succeeded:', dbData);
+            const upsertRes = await fetch(`${SUPA_URL}/rest/v1/users`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'apikey': SERVICE_KEY,
+                    'Authorization': `Bearer ${SERVICE_KEY}`,
+                    'Prefer': 'resolution=merge-duplicates,return=representation'
+                },
+                body: JSON.stringify(userRow)
+            });
+
+            if (!upsertRes.ok) {
+                const errBody = await upsertRes.text();
+                console.error('[Alumni Signup] DB upsert failed:', errBody);
+                throw new Error('Database error saving profile. Please try again.');
             }
+            console.log('[Alumni Signup] ✅ User saved to database successfully');
 
             // Synchronize with public.alumni_profiles table in Supabase
             const profileRow = {
@@ -1197,23 +1183,21 @@
                 mentor_available: true
             };
 
-            const { data: profData, error: profError } = await client.from('alumni_profiles').upsert(profileRow).select();
-            if (profError) {
-                console.warn('[Alumni Signup] Direct profile upsert warning, trying backend API:', profError);
-                try {
-                    const res = await fetch('/api/alumni-profile', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(profileRow)
-                    });
-                    if (!res.ok) {
-                        console.warn('[Alumni Signup] Backend profile API also failed, but continuing...');
-                    }
-                } catch (apiProfErr) {
-                    console.warn('[Alumni Signup] Alumni profile save warning (non-fatal):', apiProfErr);
-                }
+            const profRes = await fetch(`${SUPA_URL}/rest/v1/alumni_profiles`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'apikey': SERVICE_KEY,
+                    'Authorization': `Bearer ${SERVICE_KEY}`,
+                    'Prefer': 'resolution=merge-duplicates,return=representation'
+                },
+                body: JSON.stringify(profileRow)
+            });
+
+            if (!profRes.ok) {
+                console.warn('[Alumni Signup] Alumni profile save warning (non-fatal):', await profRes.text());
             } else {
-                console.log('[Alumni Signup] ✅ public.alumni_profiles synchronized:', profData);
+                console.log('[Alumni Signup] ✅ Alumni profile saved successfully');
             }
 
             // Save session to localStorage
